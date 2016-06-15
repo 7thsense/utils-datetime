@@ -22,10 +22,7 @@ lazy val ssUtilsDatetime = crossProject.crossType(CrossType.Full).in(file("."))
     licenses +=("MIT", url("http://opensource.org/licenses/MIT")),
     crossScalaVersions := Seq(scala211Version),
     scalaVersion := scala211Version,
-    libraryDependencies ++= Dependencies.ScalaTest.value
-  )
-  .jvmSettings(
-    libraryDependencies ++= Dependencies.JodaTime.value
+    libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaTest.value
   )
   .jsSettings(
     libraryDependencies += "io.github.widok" %%% "scala-js-momentjs" % "0.1.5"
@@ -34,3 +31,5 @@ lazy val ssUtilsDatetime = crossProject.crossType(CrossType.Full).in(file("."))
 lazy val ssUtilsDatetimeJVM = ssUtilsDatetime.jvm
 
 lazy val ssUtilsDatetimeJS = ssUtilsDatetime.js
+
+//lazy val ssUtilsDatetimeCodecsCirce = crossProject.crossType(CrossType.Pure).in(file("./codecs-circe"))

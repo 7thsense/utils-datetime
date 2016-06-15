@@ -14,16 +14,6 @@ trait TSSDateTimeZoneOps {
   def parse(s: String): Option[SSDateTime.TimeZone]
   def instantAsIsoString(instant: SSDateTime.Instant): String
 
-  implicit class RichTimeZone(t: TimeZone) {
-    def valid: Boolean = isValid(t.name)
-
-    def offsetSecondsAt(instant: SSDateTime.Instant = SSDateTime.now): Integer = offsetSeconds(t, instant)
-  }
-
-  implicit class RichInstant(instant: SSDateTime.Instant) {
-    def asIsoString: String = instantAsIsoString(instant)
-  }
-
   def normalizeOffset(offset: String): Option[String] = {
     Try(Integer.parseInt(offset)).toOption.map(o => "%+05d".format(o))
   }
