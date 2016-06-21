@@ -2,11 +2,11 @@ package com.theseventhsense.datetime
 
 import java.time.ZonedDateTime
 
-import com.theseventhsense.utils.types.SSDateTime.{DateTime, Instant, TimeZone}
+import com.theseventhsense.utils.types.SSDateTime.{ DateTime, Instant, TimeZone }
 
 /**
-  * Created by erik on 6/15/16.
-  */
+ * Created by erik on 6/15/16.
+ */
 trait JavaTimeImplicits {
 
   implicit class RichJavaTimeInstant(instant: java.time.Instant) {

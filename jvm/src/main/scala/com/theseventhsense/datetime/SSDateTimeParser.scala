@@ -1,7 +1,7 @@
 package com.theseventhsense.datetime
 
-import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
-import java.time.{ZoneId, ZonedDateTime}
+import java.time.format.{ DateTimeFormatter, DateTimeFormatterBuilder }
+import java.time.{ ZoneId, ZonedDateTime }
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime.DateTime
@@ -9,9 +9,8 @@ import com.theseventhsense.utils.types.SSDateTime.DateTime
 object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   // Force the default timezone to be UTC
 
-
   lazy val Eastern = ZoneId.of("US/Eastern")
-  lazy val Central  = ZoneId.of("US/Central")
+  lazy val Central = ZoneId.of("US/Central")
   lazy val Mountain = ZoneId.of("US/Mountain")
   lazy val Pacific = ZoneId.of("US/Pacific")
 
@@ -68,7 +67,7 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
         dts = dts.replace(abbr, zone.getId)
       }
       Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter))
-        .leftMap(ex => DateTime.ParseError.Unknown(ex.getMessage)  )
+        .leftMap(ex => DateTime.ParseError.Unknown(ex.getMessage))
     }
   }
 

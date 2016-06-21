@@ -4,13 +4,13 @@ import java.time.ZoneId
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
-import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
+import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
 
 import scala.util.Try
 
 /**
-  * Created by erik on 6/15/16.
-  */
+ * Created by erik on 6/15/16.
+ */
 class JavaTimeRichTimeZone(timeZone: TimeZone)
     extends AbstractRichTimeZone(timeZone)
     with JavaTimeInstantImplicits {

@@ -2,14 +2,14 @@ package com.theseventhsense.datetime
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
-import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
-import org.widok.moment.{CalendarOpts, Moment}
+import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
+import org.widok.moment.{ CalendarOpts, Moment }
 
 import scala.scalajs.js
 
 /**
-  * Created by erik on 6/15/16.
-  */
+ * Created by erik on 6/15/16.
+ */
 class MomentRichInstant(instant: Instant) extends AbstractRichInstant(instant) with MomentImplicits {
   val DefaultHourFormat = "ha"
   val DefaultCalendarOpts = js.Dynamic.literal(

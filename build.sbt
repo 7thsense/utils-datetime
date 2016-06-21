@@ -3,7 +3,7 @@ val scala210Version = "2.10.5"
 
 
 lazy val ssUtilsDatetimeRoot = project.in(file("."))
-  .aggregate(ssUtilsDatetimeJS, ssUtilsDatetimeJVM)
+  .aggregate(ssUtilsDatetimeJS, ssUtilsDatetimeJVM, ssUtilsDatetimeCodecsCirceJS, ssUtilsDatetimeCodecsCirceJVM)
   .settings(
     publish := {},
     publishLocal := {},
@@ -11,17 +11,21 @@ lazy val ssUtilsDatetimeRoot = project.in(file("."))
     scalaVersion := scala211Version
   )
 
+val CommonSettings = Seq(
+  organization := "com.theseventhsense",
+  version := "0.1.0",
+  isSnapshot := false,
+  publishMavenStyle := true,
+  bintrayOrganization := Some("7thsense"),
+  licenses +=("MIT", url("http://opensource.org/licenses/MIT")),
+  crossScalaVersions := Seq(scala211Version),
+  scalaVersion := scala211Version
+)
+
 lazy val ssUtilsDatetime = crossProject.crossType(CrossType.Full).in(file("."))
+  .settings(CommonSettings: _*)
   .settings(
-    organization := "com.theseventhsense",
-    version := "0.1.0",
     name := "utils-datetime",
-    isSnapshot := false,
-    publishMavenStyle := true,
-    bintrayOrganization := Some("7thsense"),
-    licenses +=("MIT", url("http://opensource.org/licenses/MIT")),
-    crossScalaVersions := Seq(scala211Version),
-    scalaVersion := scala211Version,
     libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaTest.value
   )
   .jsSettings(
@@ -32,4 +36,23 @@ lazy val ssUtilsDatetimeJVM = ssUtilsDatetime.jvm
 
 lazy val ssUtilsDatetimeJS = ssUtilsDatetime.js
 
-//lazy val ssUtilsDatetimeCodecsCirce = crossProject.crossType(CrossType.Pure).in(file("./codecs-circe"))
+lazy val ssUtilsDatetimeCodecsCirce = crossProject.crossType(CrossType.Pure).in(file("./codecs-circe"))
+  .dependsOn(ssUtilsDatetime)
+  .settings(CommonSettings: _*)
+  .settings(
+    name := "utils-datetime-circe",
+    libraryDependencies ++= Dependencies.Circe.value
+  )
+
+lazy val ssUtilsDatetimeCodecsCirceJVM = ssUtilsDatetimeCodecsCirce.jvm
+
+lazy val ssUtilsDatetimeCodecsCirceJS = ssUtilsDatetimeCodecsCirce.js
+
+lazy val ssUtilsDatetimeCodecsPlay = project.in(file("./codecs-playjson"))
+  .dependsOn(ssUtilsDatetime.jvm)
+  .settings(CommonSettings: _*)
+  .settings(
+    name := "utils-datetime-playjson",
+    libraryDependencies ++= Dependencies.PlayJson.value
+  )
+

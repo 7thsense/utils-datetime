@@ -1,7 +1,7 @@
 package com.theseventhsense.datetime
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime.{DateTime, Instant, TimeZone}
+import com.theseventhsense.utils.types.SSDateTime.{ DateTime, Instant, TimeZone }
 import org.widok.moment.Moment
 
 import scala.scalajs.js.Date

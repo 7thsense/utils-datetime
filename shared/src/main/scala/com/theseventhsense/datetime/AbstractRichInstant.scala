@@ -1,11 +1,11 @@
 package com.theseventhsense.datetime
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
+import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
 
 /**
-  * Created by erik on 6/15/16.
-  */
+ * Created by erik on 6/15/16.
+ */
 abstract class AbstractRichInstant(instant: Instant) {
   def asIsoString: String
   def calendarInZone(timeZone: TimeZone): String

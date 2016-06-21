@@ -1,18 +1,18 @@
 package com.theseventhsense.datetime
 import java.time.ZonedDateTime
-import java.time.format.{DateTimeFormatter, DateTimeParseException}
+import java.time.format.{ DateTimeFormatter, DateTimeParseException }
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime._
 
 /**
-  * Created by erik on 6/15/16.
-  */
+ * Created by erik on 6/15/16.
+ */
 class JavaTimeRichDateTime(dateTime: DateTime)
-  extends AbstractRichDateTime(dateTime)
-  with JavaTimeInstantImplicits
-  with JavaTimeTimeZoneImplicits
-  with JavaTimeImplicits {
+    extends AbstractRichDateTime(dateTime)
+    with JavaTimeInstantImplicits
+    with JavaTimeTimeZoneImplicits
+    with JavaTimeImplicits {
 
   def asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
 
