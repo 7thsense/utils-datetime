@@ -1,6 +1,7 @@
 package com.theseventhsense.datetime
 import java.time.ZonedDateTime
 import java.time.format.{ DateTimeFormatter, DateTimeParseException }
+import java.time.temporal.{ TemporalAdjuster, TemporalAdjusters }
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime._
@@ -25,8 +26,9 @@ class JavaTimeRichDateTime(dateTime: DateTime)
   override def withMinuteOfHour(minuteOfHour: Int): DateTime =
     asJavaTime.withMinute(minuteOfHour).asU
 
-  override def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime =
-    ???
+  override def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime = {
+    withDayNumOfWeek(dayOfWeek.isoNumber)
+  }
 
   override def dayOfYear: Int = asJavaTime.getDayOfYear
 
@@ -38,9 +40,16 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def year: Int = asJavaTime.getYear
 
-  override def withMillisOfDay(millis: Int): DateTime = ???
+  override def atStartOfDay: DateTime = asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
 
-  override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = ???
+  override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = {
+    val dayOfWeek = java.time.DayOfWeek.of(dayOfWeekNum)
+    if (dayOfWeekNum > asJavaTime.getDayOfWeek.getValue) {
+      asJavaTime.`with`(TemporalAdjusters.nextOrSame(dayOfWeek)).asU
+    } else {
+      asJavaTime.`with`(TemporalAdjusters.previousOrSame(dayOfWeek)).asU
+    }
+  }
 
   override def withSecondOfMinute(secondOfMinute: Int): DateTime = asJavaTime.withSecond(secondOfMinute).asU
 }

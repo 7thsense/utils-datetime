@@ -6,8 +6,8 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 /**
-  * Created by erik on 6/21/16.
-  */
+ * Created by erik on 6/21/16.
+ */
 trait UDateTimeFormats {
   implicit val uDateTimeZoneReads: Reads[SSDateTime.TimeZone] = new Reads[SSDateTime.TimeZone] {
     def reads(json: JsValue): JsResult[SSDateTime.TimeZone] = json match {
@@ -24,7 +24,7 @@ trait UDateTimeFormats {
   implicit val uDateTimeInstantReads: Reads[SSDateTime.Instant] = new Reads[SSDateTime.Instant] {
     def reads(json: JsValue): JsResult[SSDateTime.Instant] = json match {
       case JsNumber(d) => JsSuccess(SSDateTime.Instant(d.toLong))
-      case JsString(s) => SSDateTime.Instant.parses) match {
+      case JsString(s) => SSDateTime.Instant.parse(s) match {
         case Xor.Right(d) => JsSuccess(d)
         case Xor.Left(e) => JsError(Seq(JsPath() ->
           Seq(ValidationError("validate.error.unexpected.format", e))))

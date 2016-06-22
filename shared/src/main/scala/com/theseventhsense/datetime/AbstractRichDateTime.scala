@@ -14,7 +14,7 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def withHourOfDay(hourOfDay: Int): DateTime
   def withDayNumOfWeek(dayOfWeekNum: Int): DateTime
   def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime
-  def withMillisOfDay(millis: Int): DateTime
+  def atStartOfDay: DateTime
   def hourOfDay: HourOfDay
   def dayOfWeek: DayOfWeek
   def dayOfYear: Int

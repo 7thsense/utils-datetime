@@ -26,7 +26,7 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
 
   override def year: Int = ???
 
-  override def withMillisOfDay(millis: Int): DateTime = ???
+  override def atStartOfDay: DateTime = ???
 
   override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = ???
 
