@@ -20,9 +20,13 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
 
   override def dayOfYear: Int = ???
 
+  override def secondOfDay: Int = ???
+
+  override def minuteOfHour: Int = ???
+
   override def hourOfDay: HourOfDay = ???
 
-  override def withHourOfDay(hourOfDay: Int): DateTime = ???
+  override def withHourNumOfDay(hourOfDay: Int): DateTime = ???
 
   override def year: Int = ???
 

@@ -15,7 +15,7 @@ class JavaTimeRichDateTime(dateTime: DateTime)
     with JavaTimeTimeZoneImplicits
     with JavaTimeImplicits {
 
-  def asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
+  lazy val asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
 
   override def withZone(timeZone: TimeZone): DateTime =
     asJavaTime.withZoneSameLocal(timeZone.asJavaTime).asU
@@ -34,9 +34,13 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def dayOfWeek: DayOfWeek = DayOfWeek.from(asJavaTime.getDayOfWeek.getValue).get
 
+  override def secondOfDay: Int = asJavaTime.getSecond + minuteOfHour * 60 + hourOfDay.num * 60 * 60
+
+  override def minuteOfHour: Int = asJavaTime.getMinute
+
   override def hourOfDay: HourOfDay = HourOfDay.from(asJavaTime.getHour).get
 
-  override def withHourOfDay(hourOfDay: Int): DateTime = asJavaTime.withHour(hourOfDay).asU
+  override def withHourNumOfDay(hourOfDay: Int): DateTime = asJavaTime.withHour(hourOfDay).asU
 
   override def year: Int = asJavaTime.getYear
 

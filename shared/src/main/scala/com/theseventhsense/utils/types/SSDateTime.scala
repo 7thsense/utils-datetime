@@ -22,53 +22,93 @@ object SSDateTime {
 
   def now: Instant = Instant.now
 
-  def parse(s: String): Xor[ParseError, DateTime] = instantOps.parse(s).map(_.asDateTime)
+  def parse(s: String): Xor[ParseError, DateTime] = instantOps.parse(s).map(_.asUTCDateTime)
 
   case class Instant(millis: Long) extends Comparable[Instant] {
     def asDate: Date = new Date(millis)
+
     def isEqual(other: Instant): Boolean = millis == other.millis
+
     def isBefore(other: Instant): Boolean = millis < other.millis
+
     def isAfter(other: Instant): Boolean = millis > other.millis
-    def +(duration: Duration): Instant = Instant(millis + duration.toMillis) //scalastyle: ignore
-    def -(duration: Duration): Instant = Instant(millis - duration.toMillis) //scalastyle: ignore
+
+    def +(duration: Duration): Instant = Instant(millis + duration.toMillis)
+
+    //scalastyle: ignore
+    def -(duration: Duration): Instant = Instant(millis - duration.toMillis)
+
+    //scalastyle: ignore
     def plus(duration: Duration): Instant = Instant(millis + duration.toMillis)
+
     def minus(duration: Duration): Instant = Instant(millis - duration.toMillis)
+
     def plusMillis(m: Long): Instant = Instant(millis + m)
+
     def minusMillis(m: Long): Instant = Instant(millis - m)
+
     def plusSeconds(seconds: Long): Instant = plusMillis(seconds * 1000)
+
     def minusSeconds(seconds: Long): Instant = minusMillis(seconds * 1000)
+
     def plusMinutes(minutes: Int): Instant = plusSeconds(minutes * 60)
+
     def minusMinutes(minutes: Int): Instant = minusSeconds(minutes * 60)
+
     def plusHours(hours: Int): Instant = plusMinutes(hours * 60)
+
     def minusHours(hours: Int): Instant = minusMinutes(hours * 60)
+
     def plusDays(days: Int): Instant = plusHours(days * 24)
+
     def minusDays(days: Int): Instant = minusHours(days * 24)
+
     def plusWeeks(weeks: Int): Instant = plusDays(weeks * 7)
+
     def minusWeeks(weeks: Int): Instant = minusDays(weeks * 7)
+
     // TODO: use a calendar to compute plusMonths
     def plusMonths(months: Int): Instant = plusDays(months * 30)
+
     def minusMonths(months: Int): Instant = minusDays(months * 30)
+
     def plusYears(years: Int): Instant = plusMonths(years * 12)
+
     def minusYears(years: Int): Instant = plusMonths(years * 12)
+
     def withZone(timeZone: TimeZone): DateTime = DateTime.apply(this, timeZone)
-    def asDateTime: DateTime = this.withZone(TimeZone.UTC)
+
+    def asUTCDateTime: DateTime = this.withZone(TimeZone.UTC)
+
     def calendar: String = this.calendarInZone(SSDateTime.TimeZone.Default)
+
     override def toString: String = this.asIsoString
+
     override def compareTo(o: Instant): Int = millis.compareTo(o.millis)
   }
 
   object Instant {
+
     sealed trait ParseError
+
     object ParseError {
+
       case class Unknown(message: String) extends ParseError
+
     }
+
     implicit def enrichInstant(instant: Instant): AbstractRichInstant = new RichInstant(instant)
+
     implicit def ordering: Ordering[Instant] = Ordering.by { instant: Instant =>
       instant.millis
     }
+
     def parse(s: String): Xor[ParseError, Instant] = instantOps.parse(s)
+
     def apply(date: Date): Instant = Instant(date.getTime)
+
     def now: Instant = apply(System.currentTimeMillis())
+
     val Max = apply(Long.MaxValue)
     val Min = apply(Long.MinValue)
   }
@@ -79,24 +119,40 @@ object SSDateTime {
   )
       extends Comparable[DateTime] {
     override def compareTo(o: DateTime): Int = o.instant.compareTo(instant)
+
     def isEqual(dateTime: DateTime): Boolean = this == dateTime
+
     def isAfter(dateTime: DateTime): Boolean = instant.isAfter(dateTime.instant)
+
     def isBefore(dateTime: DateTime): Boolean = instant.isBefore(dateTime.instant)
+
     def plusHours(days: Int): DateTime = DateTime(instant.plusHours(days), zone)
+
     def minusHours(days: Int): DateTime = DateTime(instant.minusHours(days), zone)
+
     def plusDays(days: Int): DateTime = DateTime(instant.plusDays(days), zone)
+
     def minusDays(days: Int): DateTime = DateTime(instant.minusDays(days), zone)
+
     def plusWeeks(weeks: Int): DateTime = DateTime(instant.plusWeeks(weeks), zone)
+
     def minusWeeks(weeks: Int): DateTime = DateTime(instant.minusWeeks(weeks), zone)
   }
 
   object DateTime {
+
     sealed abstract class ParseError extends Product with Serializable
+
     object ParseError {
+
       case object NotImplemented extends ParseError
+
       case class Unknown(message: String) extends ParseError
+
     }
+
     implicit def enrichDateTime(dateTime: DateTime): AbstractRichDateTime = new RichDateTime(dateTime)
+
     def fromMillis(millis: Long, zone: TimeZone): DateTime = DateTime(Instant(millis), zone)
 
     def parse(s: String) = dateTimeOps.parse(s)
@@ -116,6 +172,7 @@ object SSDateTime {
 
   sealed trait KnownTimeZone extends TimeZone {
     def knownName: String
+
     override def toString: String = s"$knownName"
   }
 
@@ -126,15 +183,21 @@ object SSDateTime {
         TimeZone.all.find(tz => tz.offsetSecondsAt(when) == zone.offsetSecondsAt(when))
       }
     }
+
     def apply(s: String): Option[TimeZone] =
       TimeZone.all.find(_.name == s).orElse(TimeZone.all.find(_.knownName == s))
   }
 
   object TimeZone {
+
     sealed abstract class ParseError extends Product with Serializable
+
     object ParseError {
+
       case object NotImplemented extends ParseError
+
       case object Unknown extends ParseError
+
     }
 
     implicit def enrichTimeZone(timeZone: TimeZone): AbstractRichTimeZone = new RichTimeZone(timeZone)
@@ -170,14 +233,17 @@ object SSDateTime {
     }
 
     object Europe {
+
       case object Western extends KnownTimeZone {
         val name = "Europe/Berlin"
         override val knownName = "Europe/Western"
       }
+
       case object Eastern extends KnownTimeZone {
         val name = "Europe/Bucharest"
         override val knownName = "Europe/Eastern"
       }
+
       case object Central extends KnownTimeZone {
         val name = "Europe/London"
         override val knownName = "Europe/Central"
@@ -187,6 +253,7 @@ object SSDateTime {
     }
 
     object Australia {
+
       case object Southern extends KnownTimeZone {
         val name = "Australia/Adelaide"
         override val knownName = "Australia/Southern"
@@ -196,6 +263,7 @@ object SSDateTime {
     }
 
     object Pacific {
+
       case object Auckland extends KnownTimeZone {
         val name = "Pacific/Auckland"
         override val knownName = "Pacific/Auckland"
@@ -216,40 +284,57 @@ object SSDateTime {
 
   sealed trait DayOfWeek extends Product with Serializable {
     def isoNumber: Int
+
     def shortText: String
   }
+
   object DayOfWeek {
+    implicit val dayOfWeekOrdering: Ordering[DayOfWeek] = Ordering.by(_.isoNumber)
+
     val First = Monday
+
     case object Monday extends DayOfWeek {
       override val isoNumber = 1
       override val shortText = "Mon"
     }
+
     case object Tuesday extends DayOfWeek {
       override val isoNumber = 2
       override val shortText = "Tue"
     }
+
     case object Wednesday extends DayOfWeek {
       override val isoNumber = 3
       override val shortText = "Wed"
     }
+
     case object Thursday extends DayOfWeek {
       override val isoNumber = 4
       override val shortText = "Thu"
     }
+
     case object Friday extends DayOfWeek {
       override val isoNumber = 5
       override val shortText = "Fri"
     }
+
     case object Saturday extends DayOfWeek {
       override val isoNumber = 6
       override val shortText = "Sat"
     }
+
     case object Sunday extends DayOfWeek {
       override val isoNumber = 7
       override val shortText = "Sun"
     }
+
     val all = Seq(Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+
     def from(isoNumber: Int): Option[DayOfWeek] = all.find(_.isoNumber == isoNumber)
+
+    def fromString(isoNumber: String): Option[DayOfWeek] = Try(isoNumber.toInt)
+      .toOption
+      .flatMap(isoNumber => all.find(_.isoNumber == isoNumber))
   }
 
   sealed trait HourOfDay extends Product with Serializable {
@@ -257,30 +342,104 @@ object SSDateTime {
   }
 
   object HourOfDay {
-    case object Hour00 extends HourOfDay { val num = 0 }
-    case object Hour01 extends HourOfDay { val num = 1 }
-    case object Hour02 extends HourOfDay { val num = 2 }
-    case object Hour03 extends HourOfDay { val num = 3 }
-    case object Hour04 extends HourOfDay { val num = 4 }
-    case object Hour05 extends HourOfDay { val num = 5 }
-    case object Hour06 extends HourOfDay { val num = 6 }
-    case object Hour07 extends HourOfDay { val num = 7 }
-    case object Hour08 extends HourOfDay { val num = 8 }
-    case object Hour09 extends HourOfDay { val num = 9 }
-    case object Hour10 extends HourOfDay { val num = 10 }
-    case object Hour11 extends HourOfDay { val num = 11 }
-    case object Hour12 extends HourOfDay { val num = 12 }
-    case object Hour13 extends HourOfDay { val num = 13 }
-    case object Hour14 extends HourOfDay { val num = 14 }
-    case object Hour15 extends HourOfDay { val num = 15 }
-    case object Hour16 extends HourOfDay { val num = 16 }
-    case object Hour17 extends HourOfDay { val num = 17 }
-    case object Hour18 extends HourOfDay { val num = 18 }
-    case object Hour19 extends HourOfDay { val num = 19 }
-    case object Hour20 extends HourOfDay { val num = 20 }
-    case object Hour21 extends HourOfDay { val num = 21 }
-    case object Hour22 extends HourOfDay { val num = 22 }
-    case object Hour23 extends HourOfDay { val num = 23 }
+    implicit val ordering: Ordering[HourOfDay] = Ordering.by(_.num)
+
+    case object Hour00 extends HourOfDay {
+      val num = 0
+    }
+
+    case object Hour01 extends HourOfDay {
+      val num = 1
+    }
+
+    case object Hour02 extends HourOfDay {
+      val num = 2
+    }
+
+    case object Hour03 extends HourOfDay {
+      val num = 3
+    }
+
+    case object Hour04 extends HourOfDay {
+      val num = 4
+    }
+
+    case object Hour05 extends HourOfDay {
+      val num = 5
+    }
+
+    case object Hour06 extends HourOfDay {
+      val num = 6
+    }
+
+    case object Hour07 extends HourOfDay {
+      val num = 7
+    }
+
+    case object Hour08 extends HourOfDay {
+      val num = 8
+    }
+
+    case object Hour09 extends HourOfDay {
+      val num = 9
+    }
+
+    case object Hour10 extends HourOfDay {
+      val num = 10
+    }
+
+    case object Hour11 extends HourOfDay {
+      val num = 11
+    }
+
+    case object Hour12 extends HourOfDay {
+      val num = 12
+    }
+
+    case object Hour13 extends HourOfDay {
+      val num = 13
+    }
+
+    case object Hour14 extends HourOfDay {
+      val num = 14
+    }
+
+    case object Hour15 extends HourOfDay {
+      val num = 15
+    }
+
+    case object Hour16 extends HourOfDay {
+      val num = 16
+    }
+
+    case object Hour17 extends HourOfDay {
+      val num = 17
+    }
+
+    case object Hour18 extends HourOfDay {
+      val num = 18
+    }
+
+    case object Hour19 extends HourOfDay {
+      val num = 19
+    }
+
+    case object Hour20 extends HourOfDay {
+      val num = 20
+    }
+
+    case object Hour21 extends HourOfDay {
+      val num = 21
+    }
+
+    case object Hour22 extends HourOfDay {
+      val num = 22
+    }
+
+    case object Hour23 extends HourOfDay {
+      val num = 23
+    }
+
     val all = Seq(
       Hour00,
       Hour01,
@@ -307,7 +466,11 @@ object SSDateTime {
       Hour22,
       Hour23
     )
+
     def from(num: Int): Option[HourOfDay] = all.find(_.num == num)
+    def fromString(num: String): Option[HourOfDay] = Try(num.toString)
+      .toOption
+      .flatMap(num => all.find(_.num == num))
   }
 
   sealed trait DayOfMonth extends Product with Serializable {
@@ -316,38 +479,135 @@ object SSDateTime {
 
   object DayOfMonth {
     // scalastyle:off
-    case object Day01 extends DayOfMonth { val num = 1 }
-    case object Day02 extends DayOfMonth { val num = 2 }
-    case object Day03 extends DayOfMonth { val num = 3 }
-    case object Day04 extends DayOfMonth { val num = 4 }
-    case object Day05 extends DayOfMonth { val num = 5 }
-    case object Day06 extends DayOfMonth { val num = 6 }
-    case object Day07 extends DayOfMonth { val num = 7 }
-    case object Day08 extends DayOfMonth { val num = 8 }
-    case object Day09 extends DayOfMonth { val num = 9 }
-    case object Day10 extends DayOfMonth { val num = 10 }
-    case object Day11 extends DayOfMonth { val num = 11 }
-    case object Day12 extends DayOfMonth { val num = 12 }
-    case object Day13 extends DayOfMonth { val num = 13 }
-    case object Day14 extends DayOfMonth { val num = 14 }
-    case object Day15 extends DayOfMonth { val num = 15 }
-    case object Day16 extends DayOfMonth { val num = 16 }
-    case object Day17 extends DayOfMonth { val num = 17 }
-    case object Day18 extends DayOfMonth { val num = 18 }
-    case object Day19 extends DayOfMonth { val num = 19 }
-    case object Day20 extends DayOfMonth { val num = 20 }
-    case object Day21 extends DayOfMonth { val num = 21 }
-    case object Day22 extends DayOfMonth { val num = 22 }
-    case object Day23 extends DayOfMonth { val num = 23 }
-    case object Day24 extends DayOfMonth { val num = 24 }
-    case object Day25 extends DayOfMonth { val num = 25 }
-    case object Day26 extends DayOfMonth { val num = 26 }
-    case object Day27 extends DayOfMonth { val num = 27 }
-    case object Day28 extends DayOfMonth { val num = 28 }
-    case object Day29 extends DayOfMonth { val num = 29 }
-    case object Day30 extends DayOfMonth { val num = 30 }
-    case object Day31 extends DayOfMonth { val num = 31 }
-    case object Day32 extends DayOfMonth { val num = 32 }
+    implicit val ordering: Ordering[DayOfMonth] = Ordering.by(_.num)
+
+    case object Day01 extends DayOfMonth {
+      val num = 1
+    }
+
+    case object Day02 extends DayOfMonth {
+      val num = 2
+    }
+
+    case object Day03 extends DayOfMonth {
+      val num = 3
+    }
+
+    case object Day04 extends DayOfMonth {
+      val num = 4
+    }
+
+    case object Day05 extends DayOfMonth {
+      val num = 5
+    }
+
+    case object Day06 extends DayOfMonth {
+      val num = 6
+    }
+
+    case object Day07 extends DayOfMonth {
+      val num = 7
+    }
+
+    case object Day08 extends DayOfMonth {
+      val num = 8
+    }
+
+    case object Day09 extends DayOfMonth {
+      val num = 9
+    }
+
+    case object Day10 extends DayOfMonth {
+      val num = 10
+    }
+
+    case object Day11 extends DayOfMonth {
+      val num = 11
+    }
+
+    case object Day12 extends DayOfMonth {
+      val num = 12
+    }
+
+    case object Day13 extends DayOfMonth {
+      val num = 13
+    }
+
+    case object Day14 extends DayOfMonth {
+      val num = 14
+    }
+
+    case object Day15 extends DayOfMonth {
+      val num = 15
+    }
+
+    case object Day16 extends DayOfMonth {
+      val num = 16
+    }
+
+    case object Day17 extends DayOfMonth {
+      val num = 17
+    }
+
+    case object Day18 extends DayOfMonth {
+      val num = 18
+    }
+
+    case object Day19 extends DayOfMonth {
+      val num = 19
+    }
+
+    case object Day20 extends DayOfMonth {
+      val num = 20
+    }
+
+    case object Day21 extends DayOfMonth {
+      val num = 21
+    }
+
+    case object Day22 extends DayOfMonth {
+      val num = 22
+    }
+
+    case object Day23 extends DayOfMonth {
+      val num = 23
+    }
+
+    case object Day24 extends DayOfMonth {
+      val num = 24
+    }
+
+    case object Day25 extends DayOfMonth {
+      val num = 25
+    }
+
+    case object Day26 extends DayOfMonth {
+      val num = 26
+    }
+
+    case object Day27 extends DayOfMonth {
+      val num = 27
+    }
+
+    case object Day28 extends DayOfMonth {
+      val num = 28
+    }
+
+    case object Day29 extends DayOfMonth {
+      val num = 29
+    }
+
+    case object Day30 extends DayOfMonth {
+      val num = 30
+    }
+
+    case object Day31 extends DayOfMonth {
+      val num = 31
+    }
+
+    case object Day32 extends DayOfMonth {
+      val num = 32
+    }
 
     val all = Seq(
       Day01,
@@ -385,6 +645,9 @@ object SSDateTime {
     )
 
     def from(num: Int): Option[DayOfMonth] = all.find(_.num == num)
+    def fromString(num: String): Option[DayOfMonth] = Try(num.toInt)
+      .toOption
+      .flatMap(num => all.find(_.num == num))
   }
 
   sealed abstract class Quarter extends Product with Serializable {
@@ -392,12 +655,30 @@ object SSDateTime {
   }
 
   object Quarter {
-    case object First extends Quarter { val num = 1 }
-    case object Second extends Quarter { val num = 2 }
-    case object Third extends Quarter { val num = 3 }
-    case object Fourth extends Quarter { val num = 4 }
+    implicit val ordering: Ordering[Quarter] = Ordering.by(_.num)
+
+    case object First extends Quarter {
+      val num = 1
+    }
+
+    case object Second extends Quarter {
+      val num = 2
+    }
+
+    case object Third extends Quarter {
+      val num = 3
+    }
+
+    case object Fourth extends Quarter {
+      val num = 4
+    }
 
     val All = Seq(First, Second, Third, Fourth)
+
+    def from(num: Int): Option[Quarter] = All.find(_.num == num)
+    def fromString(num: String): Option[Quarter] = Try(num.toInt)
+      .toOption
+      .flatMap(num => All.find(_.num == num))
   }
 
   sealed trait Month extends Product with Serializable {
@@ -407,26 +688,65 @@ object SSDateTime {
   }
 
   object Month {
-    implicit val ordering: Ordering[Month] = Ordering.by(x => x.num)
-    case object January extends Month { val num = 1 }
-    case object February extends Month { val num = 2 }
-    case object March extends Month { val num = 3 }
-    case object April extends Month { val num = 4 }
-    case object May extends Month { val num = 5 }
-    case object June extends Month { val num = 6 }
-    case object July extends Month { val num = 7 }
-    case object August extends Month { val num = 8 }
-    case object September extends Month { val num = 9 }
-    case object October extends Month { val num = 10 }
-    case object November extends Month { val num = 11 }
-    case object December extends Month { val num = 12 }
+    implicit val ordering: Ordering[Month] = Ordering.by(_.num)
+
+    case object January extends Month {
+      val num = 1
+    }
+
+    case object February extends Month {
+      val num = 2
+    }
+
+    case object March extends Month {
+      val num = 3
+    }
+
+    case object April extends Month {
+      val num = 4
+    }
+
+    case object May extends Month {
+      val num = 5
+    }
+
+    case object June extends Month {
+      val num = 6
+    }
+
+    case object July extends Month {
+      val num = 7
+    }
+
+    case object August extends Month {
+      val num = 8
+    }
+
+    case object September extends Month {
+      val num = 9
+    }
+
+    case object October extends Month {
+      val num = 10
+    }
+
+    case object November extends Month {
+      val num = 11
+    }
+
+    case object December extends Month {
+      val num = 12
+    }
+
     val all = Seq(
       January, February, March, April, May, June, July, August, September, October, November, December
     )
+
     def from(num: Int): Option[Month] = {
       all.find(_.num == num)
     }
-    def from(name: String): Option[Month] = {
+
+    def fromString(name: String): Option[Month] = {
       all.find(_.getClass.getSimpleName.toLowerCase == name.toLowerCase).orElse(all.find(_.num == name.toInt))
     }
   }
@@ -436,12 +756,30 @@ object SSDateTime {
   }
 
   object WeekOfMonth {
-    case object First extends WeekOfMonth { val num = 1 }
-    case object Second extends WeekOfMonth { val num = 2 }
-    case object Third extends WeekOfMonth { val num = 3 }
-    case object Fourth extends WeekOfMonth { val num = 4 }
-    case object Fifth extends WeekOfMonth { val num = 5 }
+    implicit val ordering: Ordering[WeekOfMonth] = Ordering.by(_.num)
+
+    case object First extends WeekOfMonth {
+      val num = 1
+    }
+
+    case object Second extends WeekOfMonth {
+      val num = 2
+    }
+
+    case object Third extends WeekOfMonth {
+      val num = 3
+    }
+
+    case object Fourth extends WeekOfMonth {
+      val num = 4
+    }
+
+    case object Fifth extends WeekOfMonth {
+      val num = 5
+    }
+
     val all = Seq(First, Second, Third, Fourth, Fifth)
+
     def from(num: Int): Option[WeekOfMonth] = all.find(_.num == num)
   }
 
@@ -450,6 +788,7 @@ object SSDateTime {
   }
 
   object Year {
-    implicit val ordering: Ordering[Year] = Ordering.by(x => x.year)
+    implicit val ordering: Ordering[Year] = Ordering.by(_.year)
   }
+
 }
