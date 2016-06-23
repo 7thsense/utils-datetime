@@ -8,7 +8,7 @@ import com.theseventhsense.utils.types.SSDateTime.{ DateTime, DayOfWeek, HourOfD
  * Created by erik on 6/15/16.
  */
 class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTime) {
-  override def withZone(timeZone: TimeZone): DateTime = ???
+  override def withZoneSameInstant(timeZone: TimeZone): DateTime = ???
 
   override def withMillisOfSecond(millisOfSecond: Int): DateTime = ???
 

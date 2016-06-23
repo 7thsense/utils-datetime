@@ -7,7 +7,8 @@ import com.theseventhsense.utils.types.SSDateTime.{ DateTime, DayOfWeek, HourOfD
  * Created by erik on 6/15/16.
  */
 abstract class AbstractRichDateTime(dateTime: DateTime) {
-  def withZone(timeZone: TimeZone): DateTime
+  def withZoneSameInstant(timeZone: TimeZone): DateTime
+  def withZoneSameLocal(timeZone: TimeZone): DateTime
   def withMillisOfSecond(millisOfSecond: Int): DateTime
   def withSecondOfMinute(secondOfMinute: Int): DateTime
   def withMinuteOfHour(minuteOfHour: Int): DateTime
@@ -22,6 +23,7 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def dayOfWeek: DayOfWeek
   def dayOfYear: Int
   def year: Int
+  def toIsoString: String
 }
 
 abstract class AbstractRichDateTimeOps {

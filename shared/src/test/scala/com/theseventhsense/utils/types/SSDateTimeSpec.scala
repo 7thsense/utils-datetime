@@ -118,7 +118,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       now.toOption.value.isEqual(nowEastern) mustEqual false
     }
     "be able to adjust zones" ignore {
-      nowEastern.withZone(SSDateTime.TimeZone.US.Central) mustEqual nowCentral
+      nowEastern.withZoneSameInstant(SSDateTime.TimeZone.US.Central) mustEqual nowCentral
     }
   }
   "the Instant class" should {

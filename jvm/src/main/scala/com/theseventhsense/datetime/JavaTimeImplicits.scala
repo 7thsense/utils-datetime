@@ -22,3 +22,5 @@ trait JavaTimeImplicits {
   }
 
 }
+
+object JavaTimeImplicits extends JavaTimeImplicits

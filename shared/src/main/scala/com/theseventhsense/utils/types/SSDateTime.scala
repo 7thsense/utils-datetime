@@ -22,7 +22,7 @@ object SSDateTime {
 
   def now: Instant = Instant.now
 
-  def parse(s: String): Xor[ParseError, DateTime] = instantOps.parse(s).map(_.asUTCDateTime)
+  def parse(s: String): Xor[DateTime.ParseError, DateTime] = dateTimeOps.parse(s)
 
   case class Instant(millis: Long) extends Comparable[Instant] {
     def asDate: Date = new Date(millis)
@@ -76,9 +76,9 @@ object SSDateTime {
 
     def minusYears(years: Int): Instant = plusMonths(years * 12)
 
-    def withZone(timeZone: TimeZone): DateTime = DateTime.apply(this, timeZone)
+    def inZone(timeZone: TimeZone): DateTime = DateTime.apply(this, timeZone)
 
-    def asUTCDateTime: DateTime = this.withZone(TimeZone.UTC)
+    def inUTC: DateTime = this.inZone(TimeZone.UTC)
 
     def calendar: String = this.calendarInZone(SSDateTime.TimeZone.Default)
 
@@ -114,11 +114,10 @@ object SSDateTime {
   }
 
   case class DateTime(
-    instant: Instant,
-    zone: TimeZone = TimeZone.UTC
-  )
-      extends Comparable[DateTime] {
-    override def compareTo(o: DateTime): Int = o.instant.compareTo(instant)
+      instant: Instant,
+      zone: TimeZone = TimeZone.UTC
+  ) extends Comparable[DateTime] {
+    override def compareTo(o: DateTime): Int = instant.compareTo(o.instant)
 
     def isEqual(dateTime: DateTime): Boolean = this == dateTime
 
@@ -137,6 +136,8 @@ object SSDateTime {
     def plusWeeks(weeks: Int): DateTime = DateTime(instant.plusWeeks(weeks), zone)
 
     def minusWeeks(weeks: Int): DateTime = DateTime(instant.minusWeeks(weeks), zone)
+
+    override def toString: String = DateTime.enrichDateTime(this).toIsoString
   }
 
   object DateTime {
@@ -164,6 +165,17 @@ object SSDateTime {
     def asUtilTimeZone: util.TimeZone = {
       Option(util.TimeZone.getTimeZone(name)).getOrElse(util.TimeZone.getDefault)
     }
+
+    override def toString: String = name
+
+    override def hashCode: Int = name.hashCode
+
+    override def equals(obj: Any): Boolean = obj match {
+      case timeZone: TimeZone =>
+        name == timeZone.name
+      case _ =>
+        false
+    }
   }
 
   case class CustomTimeZone(name: String) extends TimeZone {
@@ -172,6 +184,8 @@ object SSDateTime {
 
   sealed trait KnownTimeZone extends TimeZone {
     def knownName: String
+
+    def knownAliases: Seq[String] = Seq.empty
 
     override def toString: String = s"$knownName"
   }
@@ -185,7 +199,9 @@ object SSDateTime {
     }
 
     def apply(s: String): Option[TimeZone] =
-      TimeZone.all.find(_.name == s).orElse(TimeZone.all.find(_.knownName == s))
+      TimeZone.all.find(_.name == s)
+        .orElse(TimeZone.all.find(_.knownName == s))
+        .orElse(TimeZone.all.find(_.knownAliases.contains(s)))
   }
 
   object TimeZone {
@@ -205,6 +221,7 @@ object SSDateTime {
     case object UTC extends KnownTimeZone {
       override val name = "UTC"
       override val knownName = "Universal Time"
+      override val knownAliases = Seq("Z", "z", "GMT")
     }
 
     object US {
@@ -468,7 +485,8 @@ object SSDateTime {
     )
 
     def from(num: Int): Option[HourOfDay] = all.find(_.num == num)
-    def fromString(num: String): Option[HourOfDay] = Try(num.toString)
+
+    def fromString(num: String): Option[HourOfDay] = Try(num.toInt)
       .toOption
       .flatMap(num => all.find(_.num == num))
   }
@@ -645,6 +663,7 @@ object SSDateTime {
     )
 
     def from(num: Int): Option[DayOfMonth] = all.find(_.num == num)
+
     def fromString(num: String): Option[DayOfMonth] = Try(num.toInt)
       .toOption
       .flatMap(num => all.find(_.num == num))
@@ -676,6 +695,7 @@ object SSDateTime {
     val All = Seq(First, Second, Third, Fourth)
 
     def from(num: Int): Option[Quarter] = All.find(_.num == num)
+
     def fromString(num: String): Option[Quarter] = Try(num.toInt)
       .toOption
       .flatMap(num => All.find(_.num == num))

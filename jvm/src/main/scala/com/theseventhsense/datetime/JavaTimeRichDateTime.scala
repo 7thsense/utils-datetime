@@ -17,7 +17,10 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   lazy val asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
 
-  override def withZone(timeZone: TimeZone): DateTime =
+  override def withZoneSameInstant(timeZone: TimeZone): DateTime =
+    asJavaTime.withZoneSameInstant(timeZone.asJavaTime).asU
+
+  override def withZoneSameLocal(timeZone: TimeZone): DateTime =
     asJavaTime.withZoneSameLocal(timeZone.asJavaTime).asU
 
   override def withMillisOfSecond(millisOfSecond: Int): DateTime =
@@ -56,6 +59,8 @@ class JavaTimeRichDateTime(dateTime: DateTime)
   }
 
   override def withSecondOfMinute(secondOfMinute: Int): DateTime = asJavaTime.withSecond(secondOfMinute).asU
+
+  override def toIsoString: String = asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
 }
 
 class JavaTimeRichDateTimeOps extends AbstractRichDateTimeOps with JavaTimeImplicits {
