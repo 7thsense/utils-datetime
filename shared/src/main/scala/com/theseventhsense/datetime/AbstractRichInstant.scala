@@ -18,5 +18,11 @@ abstract class AbstractRichInstantOps {
 
   def fromString(s: String): Xor[Instant.ParseError, Instant]
 
+  def fromStringLocalAsUTC(s: String): Xor[Instant.ParseError, Instant]
+
   def parse(s: String): Xor[Instant.ParseError, Instant] = fromLong(s).orElse(fromString(s))
+
+  def parseLocalAsUTC(s: String): Xor[Instant.ParseError, Instant] =
+    fromString(s)
+      .orElse(fromStringLocalAsUTC(s))
 }

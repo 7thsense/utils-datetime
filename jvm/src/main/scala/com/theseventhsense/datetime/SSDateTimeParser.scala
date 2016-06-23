@@ -22,9 +22,9 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
 
   lazy val noOffsetSeperatorDateTimeFormatter3: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  lazy val dateTimeFormatterWithTimeZone: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss ZZZ")
+  lazy val dateTimeFormatterWithTimeZone: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss zzz")
 
-  lazy val spacesDateTimeFormatterWithTimeZone: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZ")
+  lazy val spacesDateTimeFormatterWithTimeZone: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss zzzz")
 
   lazy val formatters: Seq[DateTimeFormatter] = Seq(
     DateTimeFormatter.ISO_OFFSET_DATE_TIME,
@@ -36,7 +36,9 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
     noOffsetSeperatorDateTimeFormatter3,
     noDateSeperatorsDateTimeFormatter,
     dateTimeFormatterWithTimeZone,
-    spacesDateTimeFormatterWithTimeZone
+    spacesDateTimeFormatterWithTimeZone,
+    DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss ZZZZZ"),
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZZZ")
   )
 
   lazy val flexibleFormatter: DateTimeFormatter = {

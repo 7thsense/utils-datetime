@@ -35,6 +35,10 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
   override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = ???
 
   override def withSecondOfMinute(secondOfMinute: Int): DateTime = ???
+
+  override def withZoneSameLocal(timeZone: TimeZone): DateTime = ???
+
+  override def toIsoString: String = ???
 }
 
 class MomentRichDateTimeOps extends AbstractRichDateTimeOps {

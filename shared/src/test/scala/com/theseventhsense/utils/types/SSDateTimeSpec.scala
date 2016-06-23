@@ -122,6 +122,12 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     }
   }
   "the Instant class" should {
+    "parse utc dates" in {
+      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Xor.Right[_]]
+    }
+    "parse local dates" in {
+      SSDateTime.Instant.parseAsLocal("2016-02-03T08:00:00") mustBe an[Xor.Right[_]]
+    }
     "be able to compare" ignore {
       now.toOption.value.instant.isEqual(nowEastern.instant) mustEqual true
     }

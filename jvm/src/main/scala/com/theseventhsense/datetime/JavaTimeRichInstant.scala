@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import java.time.ZonedDateTime
+import java.time.{ ZoneId, ZonedDateTime }
 import java.time.format.{ DateTimeFormatter, DateTimeParseException, FormatStyle }
 
 import cats.data.Xor
@@ -24,8 +24,24 @@ class JavaTimeRichInstant(instant: Instant) extends AbstractRichInstant(instant)
 }
 
 class JavaTimeRichInstantOps extends AbstractRichInstantOps with JavaTimeImplicits {
+  val UTC = ZoneId.of("UTC")
+  override def fromStringLocalAsUTC(s: String): Xor[Instant.ParseError, Instant] =
+    Xor.catchNonFatal(DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(s))
+      .map(java.time.LocalDateTime.from)
+      .map(_.atZone(UTC).asU.instant)
+      .leftMap { case err => Instant.ParseError.Unknown(err.toString) }
+
+  def parseInstant(s: String): Xor[Instant.ParseError, Instant] =
+    Xor.catchNonFatal(java.time.Instant.parse(s))
+      .map(_.asU)
+      .leftMap { case err => Instant.ParseError.Unknown(err.toString) }
+
+  def parseZoned(s: String): Xor[Instant.ParseError, Instant] =
+    SSDateTimeParser.parse(s)
+      .map { case dt => dt.instant }
+      .leftMap { case err => Instant.ParseError.Unknown(err.toString) }
+
   override def fromString(s: String): Xor[Instant.ParseError, Instant] =
-    SSDateTimeParser
-      .parse(s)
-      .bimap({ case err => Instant.ParseError.Unknown(err.toString) }, { case dt => dt.instant })
+    parseInstant(s)
+      .orElse(parseZoned(s))
 }

@@ -105,6 +105,8 @@ object SSDateTime {
 
     def parse(s: String): Xor[ParseError, Instant] = instantOps.parse(s)
 
+    def parseAsLocal(s: String): Xor[ParseError, Instant] = instantOps.parseLocalAsUTC(s)
+
     def apply(date: Date): Instant = Instant(date.getTime)
 
     def now: Instant = apply(System.currentTimeMillis())

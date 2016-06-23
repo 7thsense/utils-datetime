@@ -2,8 +2,9 @@ package com.theseventhsense.datetime
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
-import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
-import org.widok.moment.{ CalendarOpts, Moment }
+import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
+import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
+import org.widok.moment.{CalendarOpts, Moment}
 
 import scala.scalajs.js
 
@@ -30,6 +31,10 @@ class MomentRichInstant(instant: Instant) extends AbstractRichInstant(instant) w
 }
 
 class MomentRichInstantOps extends AbstractRichInstantOps {
+
+  override def fromStringLocalAsUTC(s: String): Xor[ParseError, Instant] =
+    Xor.left(ParseError.Unknown("not implemented"))
+
   override def fromString(s: String): Xor[Instant.ParseError, Instant] =
     SSDateTimeParser.parse(s).map(_.instant).leftMap(err => Instant.ParseError.Unknown(err.toString))
 }
