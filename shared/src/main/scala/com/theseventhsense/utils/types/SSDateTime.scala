@@ -351,9 +351,10 @@ object SSDateTime {
 
     def from(isoNumber: Int): Option[DayOfWeek] = all.find(_.isoNumber == isoNumber)
 
-    def fromString(isoNumber: String): Option[DayOfWeek] = Try(isoNumber.toInt)
+    def fromString(s: String): Option[DayOfWeek] = Try(s.toInt)
       .toOption
-      .flatMap(isoNumber => all.find(_.isoNumber == isoNumber))
+      .flatMap(isoNumber => all.find(d => d.isoNumber == isoNumber))
+      .orElse(all.find(d => d.shortText == s))
   }
 
   sealed trait HourOfDay extends Product with Serializable {
