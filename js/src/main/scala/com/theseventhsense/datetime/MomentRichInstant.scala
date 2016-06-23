@@ -3,8 +3,8 @@ package com.theseventhsense.datetime
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
-import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
-import org.widok.moment.{CalendarOpts, Moment}
+import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
+import org.widok.moment.{ CalendarOpts, Moment }
 
 import scala.scalajs.js
 
