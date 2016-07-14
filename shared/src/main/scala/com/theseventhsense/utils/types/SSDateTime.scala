@@ -770,7 +770,9 @@ object SSDateTime {
     }
 
     def fromString(name: String): Option[Month] = {
-      all.find(_.getClass.getSimpleName.toLowerCase == name.toLowerCase).orElse(all.find(_.num == name.toInt))
+      val intOpt = Try(name.toInt).toOption
+      intOpt.flatMap(monthNum => all.find(_.num == monthNum))
+        .orElse(all.find(_.getClass.getSimpleName.toLowerCase == name.toLowerCase))
     }
   }
 
