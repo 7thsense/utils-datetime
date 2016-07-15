@@ -705,6 +705,8 @@ object SSDateTime {
   }
 
   sealed trait Month extends Product with Serializable {
+    val name: String
+    val abbr: String
     val num: Int
     lazy val quarter: Quarter =
       Quarter.All.find(_.num == ((num - 1) / 3 + 1)).getOrElse(throw new RuntimeException("Invalid month"))
@@ -714,50 +716,74 @@ object SSDateTime {
     implicit val ordering: Ordering[Month] = Ordering.by(_.num)
 
     case object January extends Month {
+      val name = "January"
+      val abbr = "Jan"
       val num = 1
     }
 
     case object February extends Month {
+      val name = "February"
+      val abbr = "Feb"
       val num = 2
     }
 
     case object March extends Month {
+      val name = "March"
+      val abbr = "Mar"
       val num = 3
     }
 
     case object April extends Month {
+      val name = "April"
+      val abbr = "Apr"
       val num = 4
     }
 
     case object May extends Month {
+      val name = "May"
+      val abbr = "May"
       val num = 5
     }
 
     case object June extends Month {
+      val name = "June"
+      val abbr = "Jun"
       val num = 6
     }
 
     case object July extends Month {
+      val name = "July"
+      val abbr = "Jul"
       val num = 7
     }
 
     case object August extends Month {
+      val name = "August"
+      val abbr = "Aug"
       val num = 8
     }
 
     case object September extends Month {
+      val name = "September"
+      val abbr = "Sep"
       val num = 9
     }
 
     case object October extends Month {
+      val name = "October"
+      val abbr = "Oct"
       val num = 10
     }
 
     case object November extends Month {
+      val name = "November"
+      val abbr = "Nov"
       val num = 11
     }
 
     case object December extends Month {
+      val name = "December"
+      val abbr = "Dec"
       val num = 12
     }
 
@@ -769,10 +795,11 @@ object SSDateTime {
       all.find(_.num == num)
     }
 
-    def fromString(name: String): Option[Month] = {
-      val intOpt = Try(name.toInt).toOption
+    def fromString(str: String): Option[Month] = {
+      val intOpt = Try(str.toInt).toOption
       intOpt.flatMap(monthNum => all.find(_.num == monthNum))
-        .orElse(all.find(_.getClass.getSimpleName.toLowerCase == name.toLowerCase))
+        .orElse(all.find(_.abbr.toLowerCase == str.toLowerCase))
+        .orElse(all.find(_.name.toLowerCase == str.toLowerCase))
     }
   }
 
