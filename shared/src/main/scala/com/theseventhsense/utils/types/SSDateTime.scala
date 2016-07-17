@@ -33,6 +33,14 @@ object SSDateTime {
 
     def isAfter(other: Instant): Boolean = millis > other.millis
 
+    def >(other: Instant): Boolean = millis > other.millis
+
+    def <(other: Instant): Boolean = millis < other.millis
+
+    def >=(other: Instant): Boolean = millis >= other.millis
+
+    def <=(other: Instant): Boolean = millis <= other.millis
+
     def +(duration: Duration): Instant = Instant(millis + duration.toMillis)
 
     //scalastyle: ignore
