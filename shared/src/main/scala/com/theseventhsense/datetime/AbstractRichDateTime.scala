@@ -1,7 +1,8 @@
 package com.theseventhsense.datetime
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime.{ DateTime, DayOfWeek, HourOfDay, TimeZone }
+import com.theseventhsense.utils.types.SSDateTime
+import com.theseventhsense.utils.types.SSDateTime.{DateTime, DayOfWeek, HourOfDay, TimeZone}
 
 /**
  * Created by erik on 6/15/16.
@@ -20,9 +21,11 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def secondOfDay: Int
   def minuteOfHour: Int
   def hourOfDay: HourOfDay
-  def dayOfWeek: DayOfWeek
+  def dayOfMonth: SSDateTime.DayOfMonth
+  def month: SSDateTime.Month
   def dayOfYear: Int
-  def year: Int
+  def dayOfWeek: DayOfWeek
+  def year: SSDateTime.Year
   def toIsoString: String
 }
 

@@ -1,9 +1,10 @@
 package com.theseventhsense.datetime
 import java.time.ZonedDateTime
-import java.time.format.{ DateTimeFormatter, DateTimeParseException }
-import java.time.temporal.{ TemporalAdjuster, TemporalAdjusters }
+import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 
 import cats.data.Xor
+import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime._
 
 /**
@@ -45,7 +46,11 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def withHourNumOfDay(hourOfDay: Int): DateTime = asJavaTime.withHour(hourOfDay).asU
 
-  override def year: Int = asJavaTime.getYear
+  override def dayOfMonth: DayOfMonth = SSDateTime.DayOfMonth.from(asJavaTime.getDayOfMonth).get
+
+  override def month: Month = SSDateTime.Month.from(asJavaTime.getMonthValue).get
+
+  override def year: SSDateTime.Year = SSDateTime.Year(asJavaTime.getYear)
 
   override def atStartOfDay: DateTime = asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
 

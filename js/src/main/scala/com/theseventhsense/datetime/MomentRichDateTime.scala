@@ -2,7 +2,7 @@ package com.theseventhsense.datetime
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime.DateTime.ParseError
-import com.theseventhsense.utils.types.SSDateTime.{ DateTime, DayOfWeek, HourOfDay, TimeZone }
+import com.theseventhsense.utils.types.SSDateTime._
 
 /**
  * Created by erik on 6/15/16.
@@ -28,7 +28,11 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
 
   override def withHourNumOfDay(hourOfDay: Int): DateTime = ???
 
-  override def year: Int = ???
+  override def dayOfMonth: DayOfMonth = ???
+
+  override def month: Month = ???
+
+  override def year: Year = ???
 
   override def atStartOfDay: DateTime = ???
 
