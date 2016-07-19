@@ -2,6 +2,7 @@ package com.theseventhsense.datetime
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
+import com.theseventhsense.utils.types.SSDateTime.DateTime.Format
 import com.theseventhsense.utils.types.SSDateTime.{DateTime, DayOfWeek, HourOfDay, TimeZone}
 
 /**
@@ -17,6 +18,7 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def withHourOfDay(hourOfDay: HourOfDay): DateTime = withHourNumOfDay(hourOfDay.num)
   def withDayNumOfWeek(dayOfWeekNum: Int): DateTime
   def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime
+  def format(format: Format): String
   def atStartOfDay: DateTime
   def secondOfDay: Int
   def minuteOfHour: Int

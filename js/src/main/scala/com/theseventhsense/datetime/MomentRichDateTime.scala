@@ -1,7 +1,7 @@
 package com.theseventhsense.datetime
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime.DateTime.ParseError
+import com.theseventhsense.utils.types.SSDateTime.DateTime.{Format, ParseError}
 import com.theseventhsense.utils.types.SSDateTime._
 
 /**
@@ -43,6 +43,8 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
   override def withZoneSameLocal(timeZone: TimeZone): DateTime = ???
 
   override def toIsoString: String = ???
+
+  override def format(format: Format): String = ???
 }
 
 class MomentRichDateTimeOps extends AbstractRichDateTimeOps {

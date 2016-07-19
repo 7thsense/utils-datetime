@@ -5,18 +5,20 @@ import java.time.temporal.TemporalAdjusters
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
+import com.theseventhsense.utils.types.SSDateTime.DateTime.Format
 import com.theseventhsense.utils.types.SSDateTime._
 
 /**
- * Created by erik on 6/15/16.
- */
+  * Created by erik on 6/15/16.
+  */
 class JavaTimeRichDateTime(dateTime: DateTime)
     extends AbstractRichDateTime(dateTime)
     with JavaTimeInstantImplicits
     with JavaTimeTimeZoneImplicits
     with JavaTimeImplicits {
 
-  lazy val asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
+  lazy val asJavaTime: ZonedDateTime =
+    ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
 
   override def withZoneSameInstant(timeZone: TimeZone): DateTime =
     asJavaTime.withZoneSameInstant(timeZone.asJavaTime).asU
@@ -65,7 +67,16 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def withSecondOfMinute(secondOfMinute: Int): DateTime = asJavaTime.withSecond(secondOfMinute).asU
 
-  override def toIsoString: String = asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+  override def toIsoString: String = format(Format.IsoZonedDateTime)
+
+  override def format(format: Format): String = format match {
+    case Format.HourAP ⇒
+      asJavaTime.format(DateTimeFormatter.ofPattern("hha")).replace("AM", "a").replace("PM", "p")
+    case Format.HourMinuteAmPm   ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+    case Format.Year             ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
+    case Format.YearMonthDay     ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
+    case Format.IsoZonedDateTime ⇒ asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+  }
 }
 
 class JavaTimeRichDateTimeOps extends AbstractRichDateTimeOps with JavaTimeImplicits {

@@ -28,7 +28,6 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
 
   lazy val formatters: Seq[DateTimeFormatter] = Seq(
     DateTimeFormatter.ISO_OFFSET_DATE_TIME,
-    DateTimeFormatter.ISO_ZONED_DATE_TIME,
     DateTimeFormatter.ISO_INSTANT,
     DateTimeFormatter.RFC_1123_DATE_TIME,
     noOffsetSeperatorDateTimeFormatter1,
@@ -68,7 +67,8 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
       for ((abbr, zone) <- timeZoneAbbreviations.toSeq) {
         dts = dts.replace(abbr, zone.getId)
       }
-      Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter))
+      Xor.catchNonFatal(ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
+        .orElse(Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
         .leftMap(ex => DateTime.ParseError.Unknown(ex.getMessage))
     }
   }

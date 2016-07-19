@@ -151,6 +151,15 @@ object SSDateTime {
   }
 
   object DateTime {
+    sealed abstract class Format extends Product with Serializable
+
+    object Format {
+      case object Year extends Format
+      case object YearMonthDay extends Format
+      case object HourAP extends Format
+      case object HourMinuteAmPm extends Format
+      case object IsoZonedDateTime extends Format
+    }
 
     sealed abstract class ParseError extends Product with Serializable
 
@@ -166,7 +175,7 @@ object SSDateTime {
 
     def fromMillis(millis: Long, zone: TimeZone): DateTime = DateTime(Instant(millis), zone)
 
-    def parse(s: String) = dateTimeOps.parse(s)
+    def parse(s: String): Xor[ParseError, DateTime] = dateTimeOps.parse(s)
   }
 
   trait TimeZone {
