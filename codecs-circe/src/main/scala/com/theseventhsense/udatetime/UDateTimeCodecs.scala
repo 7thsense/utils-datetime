@@ -3,9 +3,9 @@ package com.theseventhsense.udatetime
 import java.util.Date
 
 import com.theseventhsense.utils.types.SSDateTime
-import com.theseventhsense.utils.types.SSDateTime.{ DayOfWeek, HourOfDay }
+import com.theseventhsense.utils.types.SSDateTime._
 import io.circe.generic.semiauto._
-import io.circe.{ Decoder, Encoder, KeyDecoder, KeyEncoder }
+import io.circe.{Decoder, Encoder, KeyDecoder, KeyEncoder}
 
 import scala.util.Try
 
@@ -24,6 +24,17 @@ trait UDateTimeCodecs {
     Decoder[Long].map(millis ⇒ new Date(millis))
   }
   implicit val dateDecoder: Decoder[Date] = longDateDecoder or stringDateDecoder
+
+  implicit val instantEncoder: Encoder[SSDateTime.Instant] = {
+    Encoder[Long].contramap(_.millis)
+  }
+  val stringInstantDecoder: Decoder[SSDateTime.Instant] = {
+    Decoder[String].emap(s ⇒ SSDateTime.Instant.parse(s).leftMap(_.toString))
+  }
+  val longInstantDecoder: Decoder[SSDateTime.Instant] = {
+    Decoder[Long].map(millis ⇒ new SSDateTime.Instant(millis))
+  }
+  implicit val instantDecoder: Decoder[SSDateTime.Instant] = longInstantDecoder or stringInstantDecoder
 
   //  implicit lazy val dateTimeEncoder: Encoder[DateTime] = {
   //    Encoder[Long].contramap(_.getMillis)
@@ -56,40 +67,38 @@ trait UDateTimeCodecs {
     .map(num ⇒ SSDateTime.WeekOfMonth.all.find(_.num == num).get)
   implicit val dateTimeZoneEncoder: Encoder[SSDateTime.TimeZone] = Encoder[String].contramap(_.name)
   implicit val dateTimeZoneDecoder: Decoder[SSDateTime.TimeZone] = Decoder[String].map(SSDateTime.TimeZone.from)
-  implicit val instantEncoder: Encoder[SSDateTime.Instant] = Encoder[Date].contramap(_.asDate)
-  implicit val instantDecoder: Decoder[SSDateTime.Instant] = Decoder[Date].map(SSDateTime.Instant.apply)
   implicit val ssDateTimeEncoder: Encoder[SSDateTime.DateTime] = deriveEncoder[SSDateTime.DateTime]
   implicit val ssDateTimeDecoder: Decoder[SSDateTime.DateTime] = deriveDecoder[SSDateTime.DateTime]
 
-  implicit val yearKeyEncoder = new KeyEncoder[SSDateTime.Year] {
+  implicit val yearKeyEncoder: KeyEncoder[Year] = new KeyEncoder[SSDateTime.Year] {
     override def apply(key: SSDateTime.Year): String = key.year.toString
   }
-  implicit val yearKeyDecoder = new KeyDecoder[SSDateTime.Year] {
+  implicit val yearKeyDecoder: KeyDecoder[Year] = new KeyDecoder[SSDateTime.Year] {
     override def apply(key: String): Option[SSDateTime.Year] =
       Try(key.toInt).toOption.map(year => SSDateTime.Year(year))
   }
-  implicit val quarterKeyEncoder = new KeyEncoder[SSDateTime.Quarter] {
+  implicit val quarterKeyEncoder: KeyEncoder[Quarter] = new KeyEncoder[SSDateTime.Quarter] {
     override def apply(key: SSDateTime.Quarter): String = key.num.toString
   }
-  implicit val quarterKeyDecoder = new KeyDecoder[SSDateTime.Quarter] {
+  implicit val quarterKeyDecoder: KeyDecoder[Quarter] = new KeyDecoder[SSDateTime.Quarter] {
     override def apply(key: String): Option[SSDateTime.Quarter] = SSDateTime.Quarter.fromString(key)
   }
-  implicit val monthKeyEncoder = new KeyEncoder[SSDateTime.Month] {
+  implicit val monthKeyEncoder: KeyEncoder[Month] = new KeyEncoder[SSDateTime.Month] {
     override def apply(key: SSDateTime.Month): String = key.num.toString
   }
-  implicit val monthKeyDecoder = new KeyDecoder[SSDateTime.Month] {
+  implicit val monthKeyDecoder: KeyDecoder[Month] = new KeyDecoder[SSDateTime.Month] {
     override def apply(key: String): Option[SSDateTime.Month] = SSDateTime.Month.fromString(key)
   }
-  implicit val dayOfWeekKeyEncoder = new KeyEncoder[DayOfWeek] {
+  implicit val dayOfWeekKeyEncoder: KeyEncoder[DayOfWeek] = new KeyEncoder[DayOfWeek] {
     override def apply(key: DayOfWeek): String = key.isoNumber.toString
   }
-  implicit val dayOfWeekKeyDecoder = new KeyDecoder[DayOfWeek] {
+  implicit val dayOfWeekKeyDecoder: KeyDecoder[DayOfWeek] = new KeyDecoder[DayOfWeek] {
     override def apply(key: String): Option[DayOfWeek] = DayOfWeek.fromString(key)
   }
-  implicit val hourOfDayKeyEncoder = new KeyEncoder[HourOfDay] {
+  implicit val hourOfDayKeyEncoder: KeyEncoder[HourOfDay] = new KeyEncoder[HourOfDay] {
     override def apply(key: HourOfDay): String = key.num.toString
   }
-  implicit val hourOfDayDecoder = new KeyDecoder[HourOfDay] {
+  implicit val hourOfDayDecoder: KeyDecoder[HourOfDay] = new KeyDecoder[HourOfDay] {
     override def apply(key: String): Option[HourOfDay] = HourOfDay.fromString(key)
   }
 
