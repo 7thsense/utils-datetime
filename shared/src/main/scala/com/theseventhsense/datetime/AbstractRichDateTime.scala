@@ -18,6 +18,7 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def withHourOfDay(hourOfDay: HourOfDay): DateTime = withHourNumOfDay(hourOfDay.num)
   def withDayNumOfWeek(dayOfWeekNum: Int): DateTime
   def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime
+  def withNextEvenHour: DateTime
   def format(format: Format): String
   def atStartOfDay: DateTime
   def secondOfDay: Int

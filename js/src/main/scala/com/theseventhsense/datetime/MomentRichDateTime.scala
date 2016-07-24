@@ -28,6 +28,8 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
 
   override def withHourNumOfDay(hourOfDay: Int): DateTime = ???
 
+  override def withNextEvenHour: DateTime = ???
+
   override def dayOfMonth: DayOfMonth = ???
 
   override def month: Month = ???

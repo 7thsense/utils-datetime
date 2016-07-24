@@ -1,7 +1,7 @@
 package com.theseventhsense.datetime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
+import java.time.temporal.{ChronoUnit, TemporalAdjusters}
 
 import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
@@ -47,6 +47,8 @@ class JavaTimeRichDateTime(dateTime: DateTime)
   override def hourOfDay: HourOfDay = HourOfDay.from(asJavaTime.getHour).get
 
   override def withHourNumOfDay(hourOfDay: Int): DateTime = asJavaTime.withHour(hourOfDay).asU
+
+  override def withNextEvenHour: DateTime = asJavaTime.truncatedTo(ChronoUnit.HOURS).plusHours(1).asU
 
   override def dayOfMonth: DayOfMonth = SSDateTime.DayOfMonth.from(asJavaTime.getDayOfMonth).get
 
