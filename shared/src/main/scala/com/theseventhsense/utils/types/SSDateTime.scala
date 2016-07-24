@@ -5,11 +5,9 @@ import java.util.Date
 
 import cats.data.Xor
 import com.theseventhsense.datetime._
-import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
-import com.theseventhsense.utils.types.SSDateTime.TimeZone.Europe.Eastern
 
-import scala.language.implicitConversions
 import scala.concurrent.duration.Duration
+import scala.language.implicitConversions
 import scala.util.Try
 
 /**
@@ -59,9 +57,9 @@ object SSDateTime {
 
     def minusSeconds(seconds: Long): Instant = minusMillis(seconds * 1000)
 
-    def plusMinutes(minutes: Int): Instant = plusSeconds(minutes * 60)
+    def plusMinutes(minutes: Int): Instant = plusSeconds(minutes.toLong * 60)
 
-    def minusMinutes(minutes: Int): Instant = minusSeconds(minutes * 60)
+    def minusMinutes(minutes: Int): Instant = minusSeconds(minutes.toLong * 60)
 
     def plusHours(hours: Int): Instant = plusMinutes(hours * 60)
 
@@ -107,7 +105,7 @@ object SSDateTime {
 
     implicit def enrichInstant(instant: Instant): AbstractRichInstant = new RichInstant(instant)
 
-    implicit def ordering: Ordering[Instant] = Ordering.by { instant: Instant =>
+    implicit val ordering: Ordering[Instant] = Ordering.by { instant: Instant =>
       instant.millis
     }
 
