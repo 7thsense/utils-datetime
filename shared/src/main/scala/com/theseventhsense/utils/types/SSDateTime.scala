@@ -374,6 +374,38 @@ object SSDateTime {
 
   sealed trait HourOfDay extends Product with Serializable {
     def num: Int
+
+    override def toString: String = formatHourShort
+
+    def formatHourShort: String = {
+      val hour = this.num
+      if (hour == 0) {
+        "mid"
+      } else if (hour < 12) {
+        s"${hour}a"
+      } else if (hour == 12) {
+        "noon"
+      } else if (hour > 12) {
+        s"${hour - 12}p"
+      } else {
+        "inv"
+      }
+    }
+
+    def formatHour: String = {
+      val hour = this.num
+      if (hour == 0) {
+        "12 Midnight"
+      } else if (hour < 12) {
+        s"${hour} AM"
+      } else if (hour == 12) {
+        "12 Noon"
+      } else if (hour > 12) {
+        s"${hour - 12} PM"
+      } else {
+        "inv"
+      }
+    }
   }
 
   object HourOfDay {

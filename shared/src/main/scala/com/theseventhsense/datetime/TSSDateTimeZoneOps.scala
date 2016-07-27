@@ -1,7 +1,6 @@
 package com.theseventhsense.datetime
 
 import com.theseventhsense.utils.types.SSDateTime
-import com.theseventhsense.utils.types.SSDateTime.TimeZone
 
 import scala.util.Try
 

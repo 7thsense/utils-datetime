@@ -1,10 +1,9 @@
 package com.theseventhsense.datetime
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
-import com.theseventhsense.utils.types.SSDateTime.{ Instant, TimeZone }
-import org.widok.moment.{ CalendarOpts, Moment }
+import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
+import org.widok.moment.{CalendarOpts, Moment}
 
 import scala.scalajs.js
 
@@ -25,7 +24,7 @@ class MomentRichInstant(instant: Instant) extends AbstractRichInstant(instant) w
   override def asIsoString: String = instant.asMoment.format
 
   override def calendarInZone(timeZone: TimeZone): String = {
-    val moment = Moment(instant.millis)
+    val moment = Moment(instant.millis.toDouble)
     moment.calendar(js.undefined, DefaultCalendarOpts)
   }
 }
