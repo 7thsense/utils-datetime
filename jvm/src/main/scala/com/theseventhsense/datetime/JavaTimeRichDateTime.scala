@@ -73,7 +73,7 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def format(format: Format): String = format match {
     case Format.HourAP ⇒
-      asJavaTime.format(DateTimeFormatter.ofPattern("hha")).replace("AM", "a").replace("PM", "p")
+      asJavaTime.format(DateTimeFormatter.ofPattern("ha")).replace("AM", "a").replace("PM", "p")
     case Format.HourMinuteAmPm   ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
     case Format.Year             ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
     case Format.YearMonthDay     ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
