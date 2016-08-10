@@ -3,7 +3,7 @@ val scala210Version = "2.10.5"
 
 
 lazy val ssUtilsDatetimeRoot = project.in(file("."))
-  .aggregate(ssUtilsDatetimeJS, ssUtilsDatetimeJVM, ssUtilsDatetimeCodecsCirceJS, ssUtilsDatetimeCodecsCirceJVM)
+  .aggregate(ssUtilsDatetimeJS, ssUtilsDatetimeJVM, ssUtilsDatetimeCodecsCirceJS, ssUtilsDatetimeCodecsCirceJVM, ssUtilsDatetimeCodecsPlay)
   .settings(
     publish := {},
     publishLocal := {},
@@ -13,7 +13,7 @@ lazy val ssUtilsDatetimeRoot = project.in(file("."))
 
 val CommonSettings = Seq(
   organization := "com.theseventhsense",
-  version := "0.1.1",
+  version := "0.1.2",
   isSnapshot := false,
   publishMavenStyle := true,
   bintrayOrganization := Some("7thsense"),
