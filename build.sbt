@@ -1,6 +1,10 @@
 val scala211Version = "2.11.8"
 val scala210Version = "2.10.5"
 
+resolvers in ThisBuild ++= Seq(
+  Resolver.bintrayRepo("easel", "maven"),
+  Resolver.bintrayRepo("7thsense", "maven")
+)
 
 lazy val ssUtilsDatetimeRoot = project.in(file("."))
   .aggregate(ssUtilsDatetimeJS, ssUtilsDatetimeJVM, ssUtilsDatetimeCodecsCirceJS, ssUtilsDatetimeCodecsCirceJVM, ssUtilsDatetimeCodecsPlay)
@@ -13,7 +17,7 @@ lazy val ssUtilsDatetimeRoot = project.in(file("."))
 
 val CommonSettings = Seq(
   organization := "com.theseventhsense",
-  version := "0.1.2",
+  version := "0.1.4",
   isSnapshot := false,
   publishMavenStyle := true,
   bintrayOrganization := Some("7thsense"),
@@ -28,8 +32,9 @@ lazy val ssUtilsDatetime = crossProject.crossType(CrossType.Full).in(file("."))
     name := "utils-datetime",
     libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaTest.value
   )
+  .jsSettings(jsEnv := NodeJSEnv().value)
   .jsSettings(
-    libraryDependencies += "io.github.widok" %%% "scala-js-momentjs" % "0.1.5"
+    libraryDependencies += "io.github.widok" %%% "scala-js-momentjs" % "0.1.6.ss.1"
   )
 
 lazy val ssUtilsDatetimeJVM = ssUtilsDatetime.jvm

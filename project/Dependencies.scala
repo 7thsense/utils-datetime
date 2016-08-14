@@ -8,7 +8,7 @@ object Dependencies {
     val Circe = "0.4.1"
     val JodaTime = "2.9.2"
     val PlayJson = "2.5.3"
-    val ScalaTest = "3.0.0-RC2"
+    val ScalaTest = "3.0.0"
   }
 
   val Cats = Def.setting(Seq(
