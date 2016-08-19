@@ -9,10 +9,10 @@ import com.theseventhsense.utils.types.SSDateTime.DateTime
 object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   // Force the default timezone to be UTC
 
-  lazy val Eastern = ZoneId.of("US/Eastern")
-  lazy val Central = ZoneId.of("US/Central")
+  lazy val Eastern  = ZoneId.of("US/Eastern")
+  lazy val Central  = ZoneId.of("US/Central")
   lazy val Mountain = ZoneId.of("US/Mountain")
-  lazy val Pacific = ZoneId.of("US/Pacific")
+  lazy val Pacific  = ZoneId.of("US/Pacific")
 
   lazy val noDateSeperatorsDateTimeFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyyMMddHH:mm:ss ZZZ")
@@ -32,18 +32,22 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   lazy val spacesDateTimeFormatterWithTimeZone: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss zzzz")
 
+  lazy val csvDateTimeFormatter: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSX")
+
   lazy val formatters: Seq[DateTimeFormatter] = Seq(
-      DateTimeFormatter.ISO_OFFSET_DATE_TIME,
-      DateTimeFormatter.ISO_INSTANT,
-      DateTimeFormatter.RFC_1123_DATE_TIME,
-      noOffsetSeperatorDateTimeFormatter1,
-      noOffsetSeperatorDateTimeFormatter2,
-      noOffsetSeperatorDateTimeFormatter3,
-      noDateSeperatorsDateTimeFormatter,
-      dateTimeFormatterWithTimeZone,
-      spacesDateTimeFormatterWithTimeZone,
-      DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss ZZZZZ"),
-      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZZZ")
+    DateTimeFormatter.ISO_OFFSET_DATE_TIME,
+    DateTimeFormatter.ISO_INSTANT,
+    DateTimeFormatter.RFC_1123_DATE_TIME,
+    noOffsetSeperatorDateTimeFormatter1,
+    noOffsetSeperatorDateTimeFormatter2,
+    noOffsetSeperatorDateTimeFormatter3,
+    noDateSeperatorsDateTimeFormatter,
+    dateTimeFormatterWithTimeZone,
+    spacesDateTimeFormatterWithTimeZone,
+    csvDateTimeFormatter,
+    DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss ZZZZZ"),
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZZZ")
   )
 
   lazy val flexibleFormatter: DateTimeFormatter = {
@@ -53,45 +57,40 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   }
 
   val timeZoneAbbreviations: Map[String, ZoneId] = Map(
-      "EST" -> Eastern,
-      "EDT" -> Eastern,
-      "CST" -> Central,
-      "CDT" -> Central,
-      "MST" -> Mountain,
-      "MDT" -> Mountain,
-      "PST" -> Pacific,
-      "PDT" -> Pacific
+    "EST" -> Eastern,
+    "EDT" -> Eastern,
+    "CST" -> Central,
+    "CDT" -> Central,
+    "MST" -> Mountain,
+    "MDT" -> Mountain,
+    "PST" -> Pacific,
+    "PDT" -> Pacific
   )
 
-  def parseDateTime(
-      dateTimeString: String): Xor[DateTime.ParseError, ZonedDateTime] = {
+  def parseDateTime(dateTimeString: String): Xor[DateTime.ParseError, ZonedDateTime] = {
     if (Option(dateTimeString).isEmpty || dateTimeString == "" ||
         dateTimeString == "null") {
-      Xor.right(ZonedDateTime.ofInstant(
-              java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
+      Xor.right(ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
     } else if (isAllDigits(dateTimeString)) {
       Xor.right(parseDateTime(dateTimeString.toLong))
     } else {
       var dts = dateTimeString
-      for ((abbr, zone) <- timeZoneAbbreviations.toSeq) {
+      for ((abbr, zone) ← timeZoneAbbreviations.toSeq) {
         dts = dts.replace(abbr, zone.getId)
       }
       Xor
-        .catchNonFatal(
-            ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
+        .catchNonFatal(ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
         .orElse(Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
-        .leftMap(ex => DateTime.ParseError.Unknown(ex.getMessage))
+        .leftMap(ex ⇒ DateTime.ParseError.Unknown(ex.getMessage))
     }
   }
 
   def parseDateTime(number: Long): ZonedDateTime = {
-    ZonedDateTime.ofInstant(
-        java.time.Instant.ofEpochMilli(number), ZoneId.of("UTC"))
+    ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(number), ZoneId.of("UTC"))
   }
 
   def isAllDigits(x: String): Boolean = x forall Character.isDigit
 
-  override def parse(
-      dateTimeString: String): Xor[DateTime.ParseError, DateTime] =
+  override def parse(dateTimeString: String): Xor[DateTime.ParseError, DateTime] =
     parseDateTime(dateTimeString).map(_.asU)
 }

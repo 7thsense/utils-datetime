@@ -25,7 +25,9 @@ class MomentRichInstant(instant: Instant)
     )
     .asInstanceOf[CalendarOpts]
 
-  override def asIsoString: String = instant.asMoment.format
+  override def asIsoString: String = instant.asMoment.utc().format
+
+  override def asCsvString: String = instant.asMoment.utc().format("Y-MM-DD HH:mm:ss.SSS[Z]")
 
   override def calendarInZone(timeZone: TimeZone): String = {
     val moment = Moment(instant.millis.toDouble)

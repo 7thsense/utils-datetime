@@ -8,6 +8,7 @@ import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
   */
 abstract class AbstractRichInstant(instant: Instant) {
   def asIsoString: String
+  def asCsvString: String
   def calendarInZone(timeZone: TimeZone): String
 }
 

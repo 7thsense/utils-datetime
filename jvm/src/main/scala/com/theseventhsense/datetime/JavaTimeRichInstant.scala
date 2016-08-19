@@ -17,6 +17,10 @@ class JavaTimeRichInstant(instant: Instant)
   override def asIsoString: String =
     DateTimeFormatter.ISO_INSTANT.format(asJavaTime)
 
+  val UTC = ZoneId.of("UTC")
+
+  override def asCsvString: String = SSDateTimeParser.csvDateTimeFormatter.format(asJavaTime.atZone(UTC))
+
   override def calendarInZone(timeZone: TimeZone): String = {
     val javaInstant = java.time.Instant.ofEpochMilli(instant.millis)
     val javaZone = java.time.ZoneId.of(timeZone.name)
@@ -40,7 +44,7 @@ class JavaTimeRichInstantOps
       .leftMap { case err => Instant.ParseError.Unknown(err.toString) }
 
   def parseInstant(s: String): Xor[Instant.ParseError, Instant] =
-    Xor.catchNonFatal(java.time.Instant.parse(s)).map(_.asU).leftMap {
+    Xor.catchNonFatal(java.time.Instant.parse(s.replace(" ", "T"))).map(_.asU).leftMap {
       case err => Instant.ParseError.Unknown(err.toString)
     }
 

@@ -99,8 +99,9 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     }
   }
 
-  lazy val now = SSDateTime.DateTime.parse("2016-06-02T00:00:00Z")
-  lazy val now2 = SSDateTime.DateTime.parse("2016-06-02T00:00:00Z")
+  val nowString = "2016-06-02T00:00:00Z"
+  lazy val now = SSDateTime.DateTime.parse(nowString)
+  lazy val now2 = SSDateTime.DateTime.parse(nowString)
   lazy val nowEastern = SSDateTime.DateTime(
     SSDateTime.Instant.parse("2016-06-01T19:00:00Z").toOption.value, SSDateTime.TimeZone.US.Eastern
   )
@@ -122,14 +123,30 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     }
   }
   "the Instant class" should {
-    "parse utc dates" in {
+    "parse iso utc dates" in {
+      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Xor.Right[_]]
+    }
+    "parse iso utc as instants" in {
       SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Xor.Right[_]]
     }
     "parse local dates" in {
       SSDateTime.Instant.parseAsLocal("2016-02-03T08:00:00") mustBe an[Xor.Right[_]]
     }
+    "output iso dates" in {
+      now.toOption.value.instant.asIsoString mustEqual nowString
+    }
     "be able to compare" ignore {
       now.toOption.value.instant.isEqual(nowEastern.instant) mustEqual true
+    }
+    val csvString = nowString.replace("T", " ").replace("Z", ".000Z")
+    "output csv dates" in {
+      now.toOption.value.instant.asCsvString mustEqual csvString
+    }
+    "parse csv dates" in {
+      now mustEqual SSDateTime.DateTime.parse(csvString)
+    }
+    "parse csv dates as instant" in {
+      now.map(_.instant) mustEqual SSDateTime.Instant.parse(csvString)
     }
   }
 }
