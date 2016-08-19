@@ -5,9 +5,10 @@ import com.theseventhsense.utils.types.SSDateTime.DateTime.{Format, ParseError}
 import com.theseventhsense.utils.types.SSDateTime._
 
 /**
- * Created by erik on 6/15/16.
- */
-class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTime) {
+  * Created by erik on 6/15/16.
+  */
+class MomentRichDateTime(dateTime: DateTime)
+    extends AbstractRichDateTime(dateTime) {
   override def withZoneSameInstant(timeZone: TimeZone): DateTime = ???
 
   override def withMillisOfSecond(millisOfSecond: Int): DateTime = ???
@@ -50,5 +51,6 @@ class MomentRichDateTime(dateTime: DateTime) extends AbstractRichDateTime(dateTi
 }
 
 class MomentRichDateTimeOps extends AbstractRichDateTimeOps {
-  override def parse(s: String): Xor[ParseError, DateTime] = SSDateTimeParser.parse(s)
+  override def parse(s: String): Xor[ParseError, DateTime] =
+    SSDateTimeParser.parse(s)
 }

@@ -17,8 +17,8 @@ class JavaTimeRichDateTime(dateTime: DateTime)
     with JavaTimeTimeZoneImplicits
     with JavaTimeImplicits {
 
-  lazy val asJavaTime: ZonedDateTime =
-    ZonedDateTime.ofInstant(dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
+  lazy val asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(
+      dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
 
   override def withZoneSameInstant(timeZone: TimeZone): DateTime =
     asJavaTime.withZoneSameInstant(timeZone.asJavaTime).asU
@@ -38,25 +38,32 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def dayOfYear: Int = asJavaTime.getDayOfYear
 
-  override def dayOfWeek: DayOfWeek = DayOfWeek.from(asJavaTime.getDayOfWeek.getValue).get
+  override def dayOfWeek: DayOfWeek =
+    DayOfWeek.from(asJavaTime.getDayOfWeek.getValue).get
 
-  override def secondOfDay: Int = asJavaTime.getSecond + minuteOfHour * 60 + hourOfDay.num * 60 * 60
+  override def secondOfDay: Int =
+    asJavaTime.getSecond + minuteOfHour * 60 + hourOfDay.num * 60 * 60
 
   override def minuteOfHour: Int = asJavaTime.getMinute
 
   override def hourOfDay: HourOfDay = HourOfDay.from(asJavaTime.getHour).get
 
-  override def withHourNumOfDay(hourOfDay: Int): DateTime = asJavaTime.withHour(hourOfDay).asU
+  override def withHourNumOfDay(hourOfDay: Int): DateTime =
+    asJavaTime.withHour(hourOfDay).asU
 
-  override def withNextEvenHour: DateTime = asJavaTime.truncatedTo(ChronoUnit.HOURS).plusHours(1).asU
+  override def withNextEvenHour: DateTime =
+    asJavaTime.truncatedTo(ChronoUnit.HOURS).plusHours(1).asU
 
-  override def dayOfMonth: DayOfMonth = SSDateTime.DayOfMonth.from(asJavaTime.getDayOfMonth).get
+  override def dayOfMonth: DayOfMonth =
+    SSDateTime.DayOfMonth.from(asJavaTime.getDayOfMonth).get
 
-  override def month: Month = SSDateTime.Month.from(asJavaTime.getMonthValue).get
+  override def month: Month =
+    SSDateTime.Month.from(asJavaTime.getMonthValue).get
 
   override def year: SSDateTime.Year = SSDateTime.Year(asJavaTime.getYear)
 
-  override def atStartOfDay: DateTime = asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
+  override def atStartOfDay: DateTime =
+    asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
 
   override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = {
     val dayOfWeek = java.time.DayOfWeek.of(dayOfWeekNum)
@@ -67,20 +74,30 @@ class JavaTimeRichDateTime(dateTime: DateTime)
     }
   }
 
-  override def withSecondOfMinute(secondOfMinute: Int): DateTime = asJavaTime.withSecond(secondOfMinute).asU
+  override def withSecondOfMinute(secondOfMinute: Int): DateTime =
+    asJavaTime.withSecond(secondOfMinute).asU
 
   override def toIsoString: String = format(Format.IsoZonedDateTime)
 
   override def format(format: Format): String = format match {
     case Format.HourAP ⇒
-      asJavaTime.format(DateTimeFormatter.ofPattern("ha")).replace("AM", "a").replace("PM", "p")
-    case Format.HourMinuteAmPm   ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
-    case Format.Year             ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
-    case Format.YearMonthDay     ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
-    case Format.IsoZonedDateTime ⇒ asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+      asJavaTime
+        .format(DateTimeFormatter.ofPattern("ha"))
+        .replace("AM", "a")
+        .replace("PM", "p")
+    case Format.HourMinuteAmPm ⇒
+      asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+    case Format.Year ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
+    case Format.YearMonthDay ⇒
+      asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
+    case Format.IsoZonedDateTime ⇒
+      asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
   }
 }
 
-class JavaTimeRichDateTimeOps extends AbstractRichDateTimeOps with JavaTimeImplicits {
-  override def parse(s: String): Xor[DateTime.ParseError, DateTime] = SSDateTimeParser.parse(s)
+class JavaTimeRichDateTimeOps
+    extends AbstractRichDateTimeOps
+    with JavaTimeImplicits {
+  override def parse(s: String): Xor[DateTime.ParseError, DateTime] =
+    SSDateTimeParser.parse(s)
 }

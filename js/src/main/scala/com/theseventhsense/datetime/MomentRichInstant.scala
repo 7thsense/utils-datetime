@@ -8,18 +8,22 @@ import org.widok.moment.{CalendarOpts, Moment}
 import scala.scalajs.js
 
 /**
- * Created by erik on 6/15/16.
- */
-class MomentRichInstant(instant: Instant) extends AbstractRichInstant(instant) with MomentImplicits {
+  * Created by erik on 6/15/16.
+  */
+class MomentRichInstant(instant: Instant)
+    extends AbstractRichInstant(instant)
+    with MomentImplicits {
   val DefaultHourFormat = "ha"
-  val DefaultCalendarOpts = js.Dynamic.literal(
-    "sameDay" -> s"[Today] $DefaultHourFormat",
-    "nextDay" -> s"[Tomorrow] $DefaultHourFormat",
-    "nextWeek" -> s"dddd $DefaultHourFormat",
-    "lastDay" -> s"[Yesterday] $DefaultHourFormat",
-    "lastWeek" -> s"[Last] dddd $DefaultHourFormat",
-    "sameElse" -> s"YYYY-MM-DD $DefaultHourFormat"
-  ).asInstanceOf[CalendarOpts]
+  val DefaultCalendarOpts = js.Dynamic
+    .literal(
+        "sameDay" -> s"[Today] $DefaultHourFormat",
+        "nextDay" -> s"[Tomorrow] $DefaultHourFormat",
+        "nextWeek" -> s"dddd $DefaultHourFormat",
+        "lastDay" -> s"[Yesterday] $DefaultHourFormat",
+        "lastWeek" -> s"[Last] dddd $DefaultHourFormat",
+        "sameElse" -> s"YYYY-MM-DD $DefaultHourFormat"
+    )
+    .asInstanceOf[CalendarOpts]
 
   override def asIsoString: String = instant.asMoment.format
 
@@ -35,5 +39,8 @@ class MomentRichInstantOps extends AbstractRichInstantOps {
     Xor.left(ParseError.Unknown("not implemented"))
 
   override def fromString(s: String): Xor[Instant.ParseError, Instant] =
-    SSDateTimeParser.parse(s).map(_.instant).leftMap(err => Instant.ParseError.Unknown(err.toString))
+    SSDateTimeParser
+      .parse(s)
+      .map(_.instant)
+      .leftMap(err => Instant.ParseError.Unknown(err.toString))
 }

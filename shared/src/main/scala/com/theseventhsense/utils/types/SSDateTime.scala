@@ -11,8 +11,8 @@ import scala.language.implicitConversions
 import scala.util.Try
 
 /**
- * Created by erik on 11/11/15.
- */
+  * Created by erik on 11/11/15.
+  */
 object SSDateTime {
   val dateTimeOps: AbstractRichDateTimeOps = RichDateTime
   val timeZoneOps: AbstractRichTimeZoneOps = RichTimeZone
@@ -20,7 +20,8 @@ object SSDateTime {
 
   def now: Instant = Instant.now
 
-  def parse(s: String): Xor[DateTime.ParseError, DateTime] = dateTimeOps.parse(s)
+  def parse(s: String): Xor[DateTime.ParseError, DateTime] =
+    dateTimeOps.parse(s)
 
   case class Instant(millis: Long) extends Comparable[Instant] {
     def asDate: Date = new Date(millis)
@@ -47,7 +48,8 @@ object SSDateTime {
     //scalastyle: ignore
     def plus(duration: Duration): Instant = Instant(millis + duration.toMillis)
 
-    def minus(duration: Duration): Instant = Instant(millis - duration.toMillis)
+    def minus(duration: Duration): Instant =
+      Instant(millis - duration.toMillis)
 
     def plusMillis(m: Long): Instant = Instant(millis + m)
 
@@ -100,18 +102,20 @@ object SSDateTime {
     object ParseError {
 
       case class Unknown(message: String) extends ParseError
-
     }
 
-    implicit def enrichInstant(instant: Instant): AbstractRichInstant = new RichInstant(instant)
+    implicit def enrichInstant(instant: Instant): AbstractRichInstant =
+      new RichInstant(instant)
 
-    implicit val ordering: Ordering[Instant] = Ordering.by { instant: Instant =>
-      instant.millis
+    implicit val ordering: Ordering[Instant] = Ordering.by {
+      instant: Instant =>
+        instant.millis
     }
 
     def parse(s: String): Xor[ParseError, Instant] = instantOps.parse(s)
 
-    def parseAsLocal(s: String): Xor[ParseError, Instant] = instantOps.parseLocalAsUTC(s)
+    def parseAsLocal(s: String): Xor[ParseError, Instant] =
+      instantOps.parseLocalAsUTC(s)
 
     def apply(date: Date): Instant = Instant(date.getTime)
 
@@ -124,26 +128,34 @@ object SSDateTime {
   case class DateTime(
       instant: Instant,
       zone: TimeZone = TimeZone.UTC
-  ) extends Comparable[DateTime] {
+  )
+      extends Comparable[DateTime] {
     override def compareTo(o: DateTime): Int = instant.compareTo(o.instant)
 
     def isEqual(dateTime: DateTime): Boolean = this == dateTime
 
-    def isAfter(dateTime: DateTime): Boolean = instant.isAfter(dateTime.instant)
+    def isAfter(dateTime: DateTime): Boolean =
+      instant.isAfter(dateTime.instant)
 
-    def isBefore(dateTime: DateTime): Boolean = instant.isBefore(dateTime.instant)
+    def isBefore(dateTime: DateTime): Boolean =
+      instant.isBefore(dateTime.instant)
 
-    def plusHours(days: Int): DateTime = DateTime(instant.plusHours(days), zone)
+    def plusHours(days: Int): DateTime =
+      DateTime(instant.plusHours(days), zone)
 
-    def minusHours(days: Int): DateTime = DateTime(instant.minusHours(days), zone)
+    def minusHours(days: Int): DateTime =
+      DateTime(instant.minusHours(days), zone)
 
     def plusDays(days: Int): DateTime = DateTime(instant.plusDays(days), zone)
 
-    def minusDays(days: Int): DateTime = DateTime(instant.minusDays(days), zone)
+    def minusDays(days: Int): DateTime =
+      DateTime(instant.minusDays(days), zone)
 
-    def plusWeeks(weeks: Int): DateTime = DateTime(instant.plusWeeks(weeks), zone)
+    def plusWeeks(weeks: Int): DateTime =
+      DateTime(instant.plusWeeks(weeks), zone)
 
-    def minusWeeks(weeks: Int): DateTime = DateTime(instant.minusWeeks(weeks), zone)
+    def minusWeeks(weeks: Int): DateTime =
+      DateTime(instant.minusWeeks(weeks), zone)
 
     override def toString: String = DateTime.enrichDateTime(this).toIsoString
   }
@@ -166,12 +178,13 @@ object SSDateTime {
       case object NotImplemented extends ParseError
 
       case class Unknown(message: String) extends ParseError
-
     }
 
-    implicit def enrichDateTime(dateTime: DateTime): AbstractRichDateTime = new RichDateTime(dateTime)
+    implicit def enrichDateTime(dateTime: DateTime): AbstractRichDateTime =
+      new RichDateTime(dateTime)
 
-    def fromMillis(millis: Long, zone: TimeZone): DateTime = DateTime(Instant(millis), zone)
+    def fromMillis(millis: Long, zone: TimeZone): DateTime =
+      DateTime(Instant(millis), zone)
 
     def parse(s: String): Xor[ParseError, DateTime] = dateTimeOps.parse(s)
   }
@@ -180,7 +193,8 @@ object SSDateTime {
     def name: String
 
     def asUtilTimeZone: util.TimeZone = {
-      Option(util.TimeZone.getTimeZone(name)).getOrElse(util.TimeZone.getDefault)
+      Option(util.TimeZone.getTimeZone(name))
+        .getOrElse(util.TimeZone.getDefault)
     }
 
     override def toString: String = name
@@ -209,14 +223,17 @@ object SSDateTime {
 
   object KnownTimeZone {
     def from(s: String, when: SSDateTime.Instant = now): Option[TimeZone] = {
-      val unknownTimeZone = KnownTimeZone.apply(s).orElse(TimeZone.parse(s).toOption)
+      val unknownTimeZone =
+        KnownTimeZone.apply(s).orElse(TimeZone.parse(s).toOption)
       unknownTimeZone.flatMap { zone =>
-        TimeZone.all.find(tz => tz.offsetSecondsAt(when) == zone.offsetSecondsAt(when))
+        TimeZone.all.find(tz =>
+              tz.offsetSecondsAt(when) == zone.offsetSecondsAt(when))
       }
     }
 
     def apply(s: String): Option[TimeZone] =
-      TimeZone.all.find(_.name == s)
+      TimeZone.all
+        .find(_.name == s)
         .orElse(TimeZone.all.find(_.knownName == s))
         .orElse(TimeZone.all.find(_.knownAliases.contains(s)))
   }
@@ -230,10 +247,10 @@ object SSDateTime {
       case object NotImplemented extends ParseError
 
       case object Unknown extends ParseError
-
     }
 
-    implicit def enrichTimeZone(timeZone: TimeZone): AbstractRichTimeZone = new RichTimeZone(timeZone)
+    implicit def enrichTimeZone(timeZone: TimeZone): AbstractRichTimeZone =
+      new RichTimeZone(timeZone)
 
     case object UTC extends KnownTimeZone {
       override val name = "UTC"
@@ -313,7 +330,10 @@ object SSDateTime {
     def parse(s: String): Xor[ParseError, TimeZone] = timeZoneOps.parse(s)
 
     def from(s: String): TimeZone =
-      KnownTimeZone.apply(s).orElse(parse(s).toOption).getOrElse(CustomTimeZone(s))
+      KnownTimeZone
+        .apply(s)
+        .orElse(parse(s).toOption)
+        .getOrElse(CustomTimeZone(s))
   }
 
   sealed trait DayOfWeek extends Product with Serializable {
@@ -323,7 +343,8 @@ object SSDateTime {
   }
 
   object DayOfWeek {
-    implicit val dayOfWeekOrdering: Ordering[DayOfWeek] = Ordering.by(_.isoNumber)
+    implicit val dayOfWeekOrdering: Ordering[DayOfWeek] =
+      Ordering.by(_.isoNumber)
 
     val First = Monday
 
@@ -362,14 +383,16 @@ object SSDateTime {
       override val shortText = "Sun"
     }
 
-    val all = Seq(Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+    val all = Seq(
+        Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
 
-    def from(isoNumber: Int): Option[DayOfWeek] = all.find(_.isoNumber == isoNumber)
+    def from(isoNumber: Int): Option[DayOfWeek] =
+      all.find(_.isoNumber == isoNumber)
 
-    def fromString(s: String): Option[DayOfWeek] = Try(s.toInt)
-      .toOption
-      .flatMap(isoNumber => all.find(d => d.isoNumber == isoNumber))
-      .orElse(all.find(d => d.shortText == s))
+    def fromString(s: String): Option[DayOfWeek] =
+      Try(s.toInt).toOption
+        .flatMap(isoNumber => all.find(d => d.isoNumber == isoNumber))
+        .orElse(all.find(d => d.shortText == s))
   }
 
   sealed trait HourOfDay extends Product with Serializable {
@@ -508,37 +531,36 @@ object SSDateTime {
     }
 
     val all = Seq(
-      Hour00,
-      Hour01,
-      Hour02,
-      Hour03,
-      Hour04,
-      Hour05,
-      Hour06,
-      Hour07,
-      Hour08,
-      Hour09,
-      Hour10,
-      Hour11,
-      Hour12,
-      Hour13,
-      Hour14,
-      Hour15,
-      Hour16,
-      Hour17,
-      Hour18,
-      Hour19,
-      Hour20,
-      Hour21,
-      Hour22,
-      Hour23
+        Hour00,
+        Hour01,
+        Hour02,
+        Hour03,
+        Hour04,
+        Hour05,
+        Hour06,
+        Hour07,
+        Hour08,
+        Hour09,
+        Hour10,
+        Hour11,
+        Hour12,
+        Hour13,
+        Hour14,
+        Hour15,
+        Hour16,
+        Hour17,
+        Hour18,
+        Hour19,
+        Hour20,
+        Hour21,
+        Hour22,
+        Hour23
     )
 
     def from(num: Int): Option[HourOfDay] = all.find(_.num == num)
 
-    def fromString(num: String): Option[HourOfDay] = Try(num.toInt)
-      .toOption
-      .flatMap(num => all.find(_.num == num))
+    def fromString(num: String): Option[HourOfDay] =
+      Try(num.toInt).toOption.flatMap(num => all.find(_.num == num))
   }
 
   sealed trait DayOfMonth extends Product with Serializable {
@@ -678,45 +700,44 @@ object SSDateTime {
     }
 
     val all = Seq(
-      Day01,
-      Day02,
-      Day03,
-      Day04,
-      Day05,
-      Day06,
-      Day07,
-      Day08,
-      Day09,
-      Day10,
-      Day11,
-      Day12,
-      Day13,
-      Day14,
-      Day15,
-      Day16,
-      Day17,
-      Day18,
-      Day19,
-      Day20,
-      Day21,
-      Day22,
-      Day23,
-      Day24,
-      Day25,
-      Day26,
-      Day27,
-      Day28,
-      Day29,
-      Day30,
-      Day31,
-      Day32
+        Day01,
+        Day02,
+        Day03,
+        Day04,
+        Day05,
+        Day06,
+        Day07,
+        Day08,
+        Day09,
+        Day10,
+        Day11,
+        Day12,
+        Day13,
+        Day14,
+        Day15,
+        Day16,
+        Day17,
+        Day18,
+        Day19,
+        Day20,
+        Day21,
+        Day22,
+        Day23,
+        Day24,
+        Day25,
+        Day26,
+        Day27,
+        Day28,
+        Day29,
+        Day30,
+        Day31,
+        Day32
     )
 
     def from(num: Int): Option[DayOfMonth] = all.find(_.num == num)
 
-    def fromString(num: String): Option[DayOfMonth] = Try(num.toInt)
-      .toOption
-      .flatMap(num => all.find(_.num == num))
+    def fromString(num: String): Option[DayOfMonth] =
+      Try(num.toInt).toOption.flatMap(num => all.find(_.num == num))
   }
 
   sealed abstract class Quarter extends Product with Serializable {
@@ -746,17 +767,17 @@ object SSDateTime {
 
     def from(num: Int): Option[Quarter] = All.find(_.num == num)
 
-    def fromString(num: String): Option[Quarter] = Try(num.toInt)
-      .toOption
-      .flatMap(num => All.find(_.num == num))
+    def fromString(num: String): Option[Quarter] =
+      Try(num.toInt).toOption.flatMap(num => All.find(_.num == num))
   }
 
   sealed trait Month extends Product with Serializable {
     val name: String
     val abbr: String
     val num: Int
-    lazy val quarter: Quarter =
-      Quarter.All.find(_.num == ((num - 1) / 3 + 1)).getOrElse(throw new RuntimeException("Invalid month"))
+    lazy val quarter: Quarter = Quarter.All
+      .find(_.num == ((num - 1) / 3 + 1))
+      .getOrElse(throw new RuntimeException("Invalid month"))
   }
 
   object Month {
@@ -835,7 +856,18 @@ object SSDateTime {
     }
 
     val all = Seq(
-      January, February, March, April, May, June, July, August, September, October, November, December
+        January,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December
     )
 
     def from(num: Int): Option[Month] = {
@@ -844,7 +876,8 @@ object SSDateTime {
 
     def fromString(str: String): Option[Month] = {
       val intOpt = Try(str.toInt).toOption
-      intOpt.flatMap(monthNum => all.find(_.num == monthNum))
+      intOpt
+        .flatMap(monthNum => all.find(_.num == monthNum))
         .orElse(all.find(_.abbr.toLowerCase == str.toLowerCase))
         .orElse(all.find(_.name.toLowerCase == str.toLowerCase))
     }
@@ -889,5 +922,4 @@ object SSDateTime {
   object Year {
     implicit val ordering: Ordering[Year] = Ordering.by(_.year)
   }
-
 }

@@ -1,4 +1,6 @@
 --style defaultWithAlign
+#--rewriteTokens ⇒;=>,←;<-
+--rewriteTokens =>;⇒,<-;←
 #--style scala.js
 --maxColumn 112
 --assumeStandardLibraryStripMargin true
