@@ -62,6 +62,11 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def year: SSDateTime.Year = SSDateTime.Year(asJavaTime.getYear)
 
+  override def plusMonths(months: Int): DateTime = asJavaTime.plusMonths(months).asU
+  override def minusMonths(months: Int): DateTime = asJavaTime.minusMonths(months).asU
+  override def plusYears(years: Int): DateTime = asJavaTime.plusYears(years).asU
+  override def minusYears(years: Int): DateTime = asJavaTime.minusYears(years).asU
+
   override def atStartOfDay: DateTime =
     asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
 

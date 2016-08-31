@@ -121,6 +121,26 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     "be able to adjust zones" ignore {
       nowEastern.withZoneSameInstant(SSDateTime.TimeZone.US.Central) mustEqual nowCentral
     }
+    "add months accurately" in {
+      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val plusOne = SSDateTime.DateTime.parse("2016-03-03T08:00:00Z").toOption.value
+      year.plusMonths(1) mustEqual plusOne
+    }
+    "subtract months accurately" in {
+      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val minusOne = SSDateTime.DateTime.parse("2016-01-03T08:00:00Z").toOption.value
+      year.minusMonths(1) mustEqual minusOne
+    }
+    "add years accurately" in {
+      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val plusOne = SSDateTime.DateTime.parse("2017-02-03T08:00:00Z").toOption.value
+      year.plusYears(1) mustEqual plusOne
+    }
+    "subtract years accurately" in {
+      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val minusOne = SSDateTime.DateTime.parse("2015-02-03T08:00:00Z").toOption.value
+      year.minusYears(1) mustEqual minusOne
+    }
   }
   "the Instant class" should {
     "parse iso utc dates" in {
@@ -148,5 +168,26 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     "parse csv dates as instant" in {
       now.map(_.instant) mustEqual SSDateTime.Instant.parse(csvString)
     }
-  }
+    "add months accurately" in {
+      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val plusOne = SSDateTime.Instant.parse("2016-03-03T08:00:00Z").toOption.value
+      year.plusMonths(1) mustEqual plusOne
+    }
+    "subtract months accurately" in {
+      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val minusOne = SSDateTime.Instant.parse("2016-01-03T08:00:00Z").toOption.value
+      year.minusMonths(1) mustEqual minusOne
+    }
+    "add years accurately" in {
+      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val plusOne = SSDateTime.Instant.parse("2017-02-03T08:00:00Z").toOption.value
+      year.plusYears(1) mustEqual plusOne
+    }
+    "subtract years accurately" in {
+      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val minusOne = SSDateTime.Instant.parse("2015-02-03T08:00:00Z").toOption.value
+      year.minusYears(1) mustEqual minusOne
+    }
+
+    }
 }

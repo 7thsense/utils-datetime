@@ -37,6 +37,14 @@ class MomentRichDateTime(dateTime: DateTime)
 
   override def year: Year = ???
 
+  override def plusMonths(weeks: Int): DateTime = ???
+
+  override def minusMonths(weeks: Int): DateTime = ???
+
+  override def plusYears(year: Int): DateTime = ???
+
+  override def minusYears(years: Int): DateTime = ???
+
   override def atStartOfDay: DateTime = ???
 
   override def withDayNumOfWeek(dayOfWeekNum: Int): DateTime = ???

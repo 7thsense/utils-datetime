@@ -75,14 +75,13 @@ object SSDateTime {
 
     def minusWeeks(weeks: Int): Instant = minusDays(weeks * 7)
 
-    // TODO: use a calendar to compute plusMonths
-    def plusMonths(months: Int): Instant = plusDays(months * 30)
+    def plusMonths(months: Int): Instant = DateTime(this).plusMonths(months).instant
 
-    def minusMonths(months: Int): Instant = minusDays(months * 30)
+    def minusMonths(months: Int): Instant = DateTime(this).minusMonths(months).instant
 
-    def plusYears(years: Int): Instant = plusMonths(years * 12)
+    def plusYears(years: Int): Instant = DateTime(this).plusYears(years).instant
 
-    def minusYears(years: Int): Instant = plusMonths(years * 12)
+    def minusYears(years: Int): Instant = DateTime(this).minusYears(years).instant
 
     def inZone(timeZone: TimeZone): DateTime = DateTime.apply(this, timeZone)
 
