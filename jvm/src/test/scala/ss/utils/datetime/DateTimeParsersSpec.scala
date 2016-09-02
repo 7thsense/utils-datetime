@@ -1,12 +1,13 @@
 package ss.utils.datetime
 
 import java.time.ZonedDateTime
-import java.time.format.{ DateTimeFormatter, TextStyle }
+import java.time.format.{DateTimeFormatter, TextStyle}
 import java.util.Locale
 
 import cats.data.Xor
 import com.theseventhsense.datetime.SSDateTimeParser
-import org.scalatest.{ MustMatchers, WordSpec }
+import com.theseventhsense.utils.types.SSDateTime
+import org.scalatest.{MustMatchers, WordSpec}
 
 class DateTimeParsersSpec extends WordSpec with MustMatchers {
   import SSDateTimeParser._
@@ -61,6 +62,13 @@ class DateTimeParsersSpec extends WordSpec with MustMatchers {
       val example = "2015-01-05 09:49:33 US/Pacific"
       s"be able to parse $example" in {
         parseDateTime(example) mustEqual Xor.right(correctDatePST)
+      }
+    }
+    "provided a wierd marketo program date" should {
+      val correctDate = parseDateTime("2015-11-18T15:25:35Z")
+      val example = "2015-11-18T15:25:35Z+0000"
+      s"be able to parse $example with the flexible parser" in {
+        parseDateTime(example) mustEqual correctDate
       }
     }
   }

@@ -35,7 +35,11 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   lazy val csvDateTimeFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSX")
 
+  lazy val marketoProgramDateTimeFormatter: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXZZZZZ")
+
   lazy val formatters: Seq[DateTimeFormatter] = Seq(
+    csvDateTimeFormatter,
     DateTimeFormatter.ISO_OFFSET_DATE_TIME,
     DateTimeFormatter.ISO_INSTANT,
     DateTimeFormatter.RFC_1123_DATE_TIME,
@@ -45,7 +49,6 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
     noDateSeperatorsDateTimeFormatter,
     dateTimeFormatterWithTimeZone,
     spacesDateTimeFormatterWithTimeZone,
-    csvDateTimeFormatter,
     DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss ZZZZZ"),
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ZZZZZ")
   )
@@ -72,12 +75,13 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
         dateTimeString == "null") {
       Xor.right(ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
     } else if (isAllDigits(dateTimeString)) {
-      Xor.right(parseDateTime(dateTimeString.toLong))
+      Xor.right(fromLong(dateTimeString.toLong))
     } else {
       var dts = dateTimeString
       for ((abbr, zone) ← timeZoneAbbreviations.toSeq) {
         dts = dts.replace(abbr, zone.getId)
       }
+      dts = dts.replace("Z+0000", "Z")
       Xor
         .catchNonFatal(ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
         .orElse(Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
@@ -85,7 +89,7 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
     }
   }
 
-  def parseDateTime(number: Long): ZonedDateTime = {
+  def fromLong(number: Long): ZonedDateTime = {
     ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(number), ZoneId.of("UTC"))
   }
 
