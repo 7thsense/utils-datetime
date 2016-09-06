@@ -1,13 +1,13 @@
 package com.theseventhsense.utils.types
 
 import cats.data.Xor
-import com.theseventhsense.utils.types.SSDateTime.{ DateTime, KnownTimeZone, TimeZone }
-import com.theseventhsense.utils.types.SSDateTime.TimeZone.{ Europe, US, UTC }
+import com.theseventhsense.utils.types.SSDateTime.{DateTime, KnownTimeZone, TimeZone}
+import com.theseventhsense.utils.types.SSDateTime.TimeZone.{Europe, US, UTC}
 import org.scalatest._
 
 /**
- * Created by erik on 1/22/16.
- */
+  * Created by erik on 1/22/16.
+  */
 class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
   "the instant class" should {
     "be able to add days" in {
@@ -19,7 +19,8 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     "be able to parse common instant formats" in {
       SSDateTime.Instant.parse("1424298423000") mustEqual Xor.right(SSDateTime.Instant(1424298423000L))
       SSDateTime.Instant.parse("2015-02-18T22:27:03Z") mustEqual Xor.right(SSDateTime.Instant(1424298423000L))
-      SSDateTime.Instant.parse("2015-02-18T17:27:03-0500") mustEqual Xor.right(SSDateTime.Instant(1424298423000L))
+      SSDateTime.Instant.parse("2015-02-18T17:27:03-0500") mustEqual Xor.right(
+        SSDateTime.Instant(1424298423000L))
       SSDateTime.Instant.parse(null) mustEqual Xor.right(SSDateTime.Instant(0L))
       //      SSDateTime.Instant.parse("2015-02-18T17:27:03 EST5EDT") mustEqual SSDateTime.Instant(1424298423000L)
     }
@@ -39,7 +40,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       TimeZone.from("America/New_York") mustEqual US.Eastern
     }
     "be able to check zone name validity" in {
-      TimeZone.all.map(tz => tz.valid)
+      TimeZone.all.map(tz ⇒ tz.valid)
     }
     "be able to parse unknown zones" in {
       SSDateTime.TimeZone.parse("Europe/Athens") mustBe a[Xor.Right[_]]
@@ -100,13 +101,15 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
   }
 
   val nowString = "2016-06-02T00:00:00Z"
-  lazy val now = SSDateTime.DateTime.parse(nowString)
+  lazy val now  = SSDateTime.DateTime.parse(nowString)
   lazy val now2 = SSDateTime.DateTime.parse(nowString)
   lazy val nowEastern = SSDateTime.DateTime(
-    SSDateTime.Instant.parse("2016-06-01T19:00:00Z").toOption.value, SSDateTime.TimeZone.US.Eastern
+    SSDateTime.Instant.parse("2016-06-01T19:00:00Z").toOption.value,
+    SSDateTime.TimeZone.US.Eastern
   )
   lazy val nowCentral = SSDateTime.DateTime(
-    SSDateTime.Instant.parse("2016-06-01T18:00:00Z").toOption.value, SSDateTime.TimeZone.US.Central
+    SSDateTime.Instant.parse("2016-06-01T18:00:00Z").toOption.value,
+    SSDateTime.TimeZone.US.Central
   )
   "the DateTime class" should {
     "parse dates" in {
@@ -122,22 +125,22 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       nowEastern.withZoneSameInstant(SSDateTime.TimeZone.US.Central) mustEqual nowCentral
     }
     "add months accurately" in {
-      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val year    = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
       val plusOne = SSDateTime.DateTime.parse("2016-03-03T08:00:00Z").toOption.value
       year.plusMonths(1) mustEqual plusOne
     }
     "subtract months accurately" in {
-      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val year     = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
       val minusOne = SSDateTime.DateTime.parse("2016-01-03T08:00:00Z").toOption.value
       year.minusMonths(1) mustEqual minusOne
     }
     "add years accurately" in {
-      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val year    = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
       val plusOne = SSDateTime.DateTime.parse("2017-02-03T08:00:00Z").toOption.value
       year.plusYears(1) mustEqual plusOne
     }
     "subtract years accurately" in {
-      val year = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
+      val year     = SSDateTime.DateTime.parse("2016-02-03T08:00:00Z").toOption.value
       val minusOne = SSDateTime.DateTime.parse("2015-02-03T08:00:00Z").toOption.value
       year.minusYears(1) mustEqual minusOne
     }
@@ -169,25 +172,34 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       now.map(_.instant) mustEqual SSDateTime.Instant.parse(csvString)
     }
     "add months accurately" in {
-      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val year    = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
       val plusOne = SSDateTime.Instant.parse("2016-03-03T08:00:00Z").toOption.value
       year.plusMonths(1) mustEqual plusOne
     }
     "subtract months accurately" in {
-      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val year     = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
       val minusOne = SSDateTime.Instant.parse("2016-01-03T08:00:00Z").toOption.value
       year.minusMonths(1) mustEqual minusOne
     }
     "add years accurately" in {
-      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val year    = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
       val plusOne = SSDateTime.Instant.parse("2017-02-03T08:00:00Z").toOption.value
       year.plusYears(1) mustEqual plusOne
     }
     "subtract years accurately" in {
-      val year = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
+      val year     = SSDateTime.Instant.parse("2016-02-03T08:00:00Z").toOption.value
       val minusOne = SSDateTime.Instant.parse("2015-02-03T08:00:00Z").toOption.value
       year.minusYears(1) mustEqual minusOne
     }
-
+    "round to the current minute accurately" in {
+      val now = SSDateTime.Instant.parse("2016-02-03T08:01:02Z").toOption.value
+      val rounded = SSDateTime.Instant.parse("2016-02-03T08:01:00Z").toOption.value
+      now.withRoundedMinute mustEqual rounded
     }
+    "round to the current minute accurately, throwing out millis/micros" in {
+      val now = SSDateTime.Instant.parse("2016-02-03T08:01:02.020Z").toOption.value
+      val rounded = SSDateTime.Instant.parse("2016-02-03T08:01:00Z").toOption.value
+      now.withRoundedMinute mustEqual rounded
+    }
+  }
 }

@@ -31,6 +31,8 @@ class MomentRichDateTime(dateTime: DateTime)
 
   override def withNextEvenHour: DateTime = ???
 
+  override def withRoundedMinute: DateTime = ???
+
   override def dayOfMonth: DayOfMonth = ???
 
   override def month: Month = ???

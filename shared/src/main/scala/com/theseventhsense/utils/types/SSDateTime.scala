@@ -83,6 +83,8 @@ object SSDateTime {
 
     def minusYears(years: Int): Instant = DateTime(this).minusYears(years).instant
 
+    def withRoundedMinute: Instant = DateTime(this).withRoundedMinute.instant
+
     def inZone(timeZone: TimeZone): DateTime = DateTime.apply(this, timeZone)
 
     def inUTC: DateTime = this.inZone(TimeZone.UTC)

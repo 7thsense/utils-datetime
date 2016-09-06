@@ -54,6 +54,9 @@ class JavaTimeRichDateTime(dateTime: DateTime)
   override def withNextEvenHour: DateTime =
     asJavaTime.truncatedTo(ChronoUnit.HOURS).plusHours(1).asU
 
+  override def withRoundedMinute: DateTime =
+    asJavaTime.truncatedTo(ChronoUnit.MINUTES).asU
+
   override def dayOfMonth: DayOfMonth =
     SSDateTime.DayOfMonth.from(asJavaTime.getDayOfMonth).get
 

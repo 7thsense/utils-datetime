@@ -20,6 +20,7 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def withDayNumOfWeek(dayOfWeekNum: Int): DateTime
   def withDayOfWeek(dayOfWeek: DayOfWeek): DateTime
   def withNextEvenHour: DateTime
+  def withRoundedMinute: DateTime
   def plusMonths(weeks: Int): DateTime
   def minusMonths(weeks: Int): DateTime
   def plusYears(year: Int): DateTime
