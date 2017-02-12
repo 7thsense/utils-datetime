@@ -1,4 +1,5 @@
 val scala211Version = "2.11.8"
+
 val scala210Version = "2.10.5"
 
 resolvers in ThisBuild ++= Seq(
