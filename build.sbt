@@ -1,7 +1,5 @@
 val scala211Version = "2.11.8"
 
-val scala210Version = "2.10.5"
-
 resolvers in ThisBuild ++= Seq(
   Resolver.bintrayRepo("easel", "maven"),
   Resolver.bintrayRepo("7thsense", "maven")
@@ -23,7 +21,7 @@ lazy val ssUtilsDatetimeRoot = project
 
 val CommonSettings = Seq(
   organization := "com.theseventhsense",
-  version := "0.1.11",
+  version := "0.1.12",
   isSnapshot := false,
   publishMavenStyle := true,
   bintrayOrganization := Some("7thsense"),
