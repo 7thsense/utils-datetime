@@ -3,7 +3,7 @@ package com.theseventhsense.utils.types
 import java.util
 import java.util.Date
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.datetime._
 
 import scala.concurrent.duration.Duration
@@ -20,7 +20,7 @@ object SSDateTime {
 
   def now: Instant = Instant.now
 
-  def parse(s: String): Xor[DateTime.ParseError, DateTime] =
+  def parse(s: String): Either[DateTime.ParseError, DateTime] =
     dateTimeOps.parse(s)
 
   case class Instant(millis: Long) extends Comparable[Instant] {
@@ -113,9 +113,9 @@ object SSDateTime {
         instant.millis
     }
 
-    def parse(s: String): Xor[ParseError, Instant] = instantOps.parse(s)
+    def parse(s: String): Either[ParseError, Instant] = instantOps.parse(s)
 
-    def parseAsLocal(s: String): Xor[ParseError, Instant] =
+    def parseAsLocal(s: String): Either[ParseError, Instant] =
       instantOps.parseLocalAsUTC(s)
 
     def apply(date: Date): Instant = Instant(date.getTime)
@@ -187,7 +187,7 @@ object SSDateTime {
     def fromMillis(millis: Long, zone: TimeZone): DateTime =
       DateTime(Instant(millis), zone)
 
-    def parse(s: String): Xor[ParseError, DateTime] = dateTimeOps.parse(s)
+    def parse(s: String): Either[ParseError, DateTime] = dateTimeOps.parse(s)
   }
 
   trait TimeZone {
@@ -328,7 +328,7 @@ object SSDateTime {
 
     val all = Seq(UTC) ++ US.all ++ Europe.all ++ Australia.all ++ Pacific.all
 
-    def parse(s: String): Xor[ParseError, TimeZone] = timeZoneOps.parse(s)
+    def parse(s: String): Either[ParseError, TimeZone] = timeZoneOps.parse(s)
 
     def from(s: String): TimeZone =
       KnownTimeZone

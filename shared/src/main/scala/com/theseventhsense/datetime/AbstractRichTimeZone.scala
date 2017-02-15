@@ -1,6 +1,5 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.TimeZone
 
@@ -14,5 +13,5 @@ abstract class AbstractRichTimeZone(timeZone: TimeZone) {
 }
 
 abstract class AbstractRichTimeZoneOps {
-  def parse(s: String): Xor[TimeZone.ParseError, SSDateTime.TimeZone]
+  def parse(s: String): Either[TimeZone.ParseError, SSDateTime.TimeZone]
 }

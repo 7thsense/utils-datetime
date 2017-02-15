@@ -3,7 +3,7 @@ package com.theseventhsense.datetime
 import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
 import java.time.{ZoneId, ZonedDateTime}
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.DateTime
 
 object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
@@ -70,21 +70,21 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
     "PDT" -> Pacific
   )
 
-  def parseDateTime(dateTimeString: String): Xor[DateTime.ParseError, ZonedDateTime] = {
+  def parseDateTime(dateTimeString: String): Either[DateTime.ParseError, ZonedDateTime] = {
     if (Option(dateTimeString).isEmpty || dateTimeString == "" ||
         dateTimeString == "null") {
-      Xor.right(ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
+      Either.right(ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
     } else if (isAllDigits(dateTimeString)) {
-      Xor.right(fromLong(dateTimeString.toLong))
+      Either.right(fromLong(dateTimeString.toLong))
     } else {
       var dts = dateTimeString
       for ((abbr, zone) ← timeZoneAbbreviations.toSeq) {
         dts = dts.replace(abbr, zone.getId)
       }
       dts = dts.replace("Z+0000", "Z")
-      Xor
+      Either
         .catchNonFatal(ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
-        .orElse(Xor.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
+        .orElse(Either.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
         .leftMap(ex ⇒ DateTime.ParseError.Unknown(ex.getMessage))
     }
   }
@@ -95,6 +95,6 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
 
   def isAllDigits(x: String): Boolean = x forall Character.isDigit
 
-  override def parse(dateTimeString: String): Xor[DateTime.ParseError, DateTime] =
+  override def parse(dateTimeString: String): Either[DateTime.ParseError, DateTime] =
     parseDateTime(dateTimeString).map(_.asU)
 }

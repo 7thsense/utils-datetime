@@ -1,5 +1,6 @@
 package ss.utils.datetime
 
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.DateTime.Format
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}

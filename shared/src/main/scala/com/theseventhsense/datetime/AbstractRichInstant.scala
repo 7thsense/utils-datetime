@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
 
 /**
@@ -14,18 +14,18 @@ abstract class AbstractRichInstant(instant: Instant) {
 
 abstract class AbstractRichInstantOps {
   def fromLong(s: String) =
-    Xor
+    Either
       .catchNonFatal(s.toLong)
       .map(millis => Instant(millis))
       .leftMap(ex => Instant.ParseError.Unknown(ex.getMessage))
 
-  def fromString(s: String): Xor[Instant.ParseError, Instant]
+  def fromString(s: String): Either[Instant.ParseError, Instant]
 
-  def fromStringLocalAsUTC(s: String): Xor[Instant.ParseError, Instant]
+  def fromStringLocalAsUTC(s: String): Either[Instant.ParseError, Instant]
 
-  def parse(s: String): Xor[Instant.ParseError, Instant] =
+  def parse(s: String): Either[Instant.ParseError, Instant] =
     fromLong(s).orElse(fromString(s))
 
-  def parseLocalAsUTC(s: String): Xor[Instant.ParseError, Instant] =
+  def parseLocalAsUTC(s: String): Either[Instant.ParseError, Instant] =
     fromString(s).orElse(fromStringLocalAsUTC(s))
 }

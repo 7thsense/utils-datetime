@@ -2,6 +2,7 @@ package com.theseventhsense.udatetime
 
 import java.util.Date
 
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime._
 import io.circe.generic.semiauto._

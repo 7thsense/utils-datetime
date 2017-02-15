@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
 
 /**
@@ -14,6 +14,6 @@ class MomentRichTimeZone(timeZone: TimeZone)
 }
 
 class MomentRichTimezoneOps extends AbstractRichTimeZoneOps {
-  override def parse(s: String): Xor[TimeZone.ParseError, TimeZone] =
-    Xor.left(TimeZone.ParseError.NotImplemented)
+  override def parse(s: String): Either[TimeZone.ParseError, TimeZone] =
+    Either.left(TimeZone.ParseError.NotImplemented)
 }

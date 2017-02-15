@@ -3,7 +3,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.{ChronoUnit, TemporalAdjusters}
 
-import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.DateTime.Format
 import com.theseventhsense.utils.types.SSDateTime._
@@ -106,6 +105,6 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 class JavaTimeRichDateTimeOps
     extends AbstractRichDateTimeOps
     with JavaTimeImplicits {
-  override def parse(s: String): Xor[DateTime.ParseError, DateTime] =
+  override def parse(s: String): Either[DateTime.ParseError, DateTime] =
     SSDateTimeParser.parse(s)
 }

@@ -1,6 +1,6 @@
 package com.theseventhsense.utils.types
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.{DateTime, KnownTimeZone, TimeZone}
 import com.theseventhsense.utils.types.SSDateTime.TimeZone.{Europe, US, UTC}
 import org.scalatest._
@@ -17,11 +17,11 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       SSDateTime.Instant(1000000).minusDays(1).millis mustEqual 1000000 - 24 * 60 * 60 * 1000
     }
     "be able to parse common instant formats" in {
-      SSDateTime.Instant.parse("1424298423000") mustEqual Xor.right(SSDateTime.Instant(1424298423000L))
-      SSDateTime.Instant.parse("2015-02-18T22:27:03Z") mustEqual Xor.right(SSDateTime.Instant(1424298423000L))
-      SSDateTime.Instant.parse("2015-02-18T17:27:03-0500") mustEqual Xor.right(
+      SSDateTime.Instant.parse("1424298423000") mustEqual Either.right(SSDateTime.Instant(1424298423000L))
+      SSDateTime.Instant.parse("2015-02-18T22:27:03Z") mustEqual Either.right(SSDateTime.Instant(1424298423000L))
+      SSDateTime.Instant.parse("2015-02-18T17:27:03-0500") mustEqual Either.right(
         SSDateTime.Instant(1424298423000L))
-      SSDateTime.Instant.parse(null) mustEqual Xor.right(SSDateTime.Instant(0L))
+      SSDateTime.Instant.parse(null) mustEqual Either.right(SSDateTime.Instant(0L))
       //      SSDateTime.Instant.parse("2015-02-18T17:27:03 EST5EDT") mustEqual SSDateTime.Instant(1424298423000L)
     }
   }
@@ -43,7 +43,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
       TimeZone.all.map(tz ⇒ tz.valid)
     }
     "be able to parse unknown zones" in {
-      SSDateTime.TimeZone.parse("Europe/Athens") mustBe a[Xor.Right[_]]
+      SSDateTime.TimeZone.parse("Europe/Athens") mustBe a[Right[_, _]]
     }
     "be able to parse unknown zones with wierd offsets" in {
       SSDateTime.TimeZone.parse("100").toOption.value.name mustEqual SSDateTime.TimeZone
@@ -53,7 +53,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
         .name
     }
     "fail to parse invalid zones" in {
-      SSDateTime.TimeZone.parse("Europ/Bogus") mustBe an[Xor.Left[_]]
+      SSDateTime.TimeZone.parse("Europ/Bogus") mustBe an[Left[_, _]]
     }
     "determine ZoneIds for TimeZones" ignore {
       //      TimeZone.all.map(_.asZoneId).size mustEqual TimeZone.all.size
@@ -64,7 +64,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
     }
     "normalize known timezones by offset" in {
       val parsed = SSDateTime.Instant.parse("2016-02-01T00:00:00Z")
-      parsed mustBe an[Xor.Right[_]]
+      parsed mustBe an[Right[_, _]]
       val now = parsed.toOption.value
       KnownTimeZone.from("-05:00", now).value mustEqual US.Eastern
       KnownTimeZone.from("-0500", now).value mustEqual US.Eastern
@@ -113,7 +113,7 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
   )
   "the DateTime class" should {
     "parse dates" in {
-      now mustBe an[Xor.Right[_]]
+      now mustBe an[Right[_, _]]
     }
     "recognize seperate objects which are equal" ignore {
       now.toOption.value.isEqual(now2.toOption.value) mustEqual true
@@ -147,13 +147,13 @@ class SSDateTimeSpec extends WordSpec with MustMatchers with OptionValues {
   }
   "the Instant class" should {
     "parse iso utc dates" in {
-      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Xor.Right[_]]
+      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Right[_, _]]
     }
     "parse iso utc as instants" in {
-      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Xor.Right[_]]
+      SSDateTime.Instant.parse("2016-02-03T08:00:00Z") mustBe an[Right[_, _]]
     }
     "parse local dates" in {
-      SSDateTime.Instant.parseAsLocal("2016-02-03T08:00:00") mustBe an[Xor.Right[_]]
+      SSDateTime.Instant.parseAsLocal("2016-02-03T08:00:00") mustBe an[Right[_, _]]
     }
     "output iso dates" in {
       now.toOption.value.instant.asIsoString mustEqual nowString

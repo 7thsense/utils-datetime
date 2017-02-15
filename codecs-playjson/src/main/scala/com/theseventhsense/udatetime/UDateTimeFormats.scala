@@ -1,6 +1,6 @@
 package com.theseventhsense.udatetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
@@ -32,8 +32,8 @@ trait UDateTimeFormats {
         case JsNumber(d) => JsSuccess(SSDateTime.Instant(d.toLong))
         case JsString(s) =>
           SSDateTime.Instant.parse(s) match {
-            case Xor.Right(d) => JsSuccess(d)
-            case Xor.Left(e) =>
+            case Right(d) => JsSuccess(d)
+            case Left(e) =>
               JsError(
                   Seq(JsPath() ->
                       Seq(ValidationError("validate.error.unexpected.format",

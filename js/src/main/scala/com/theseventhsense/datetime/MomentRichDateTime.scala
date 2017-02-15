@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.DateTime.{Format, ParseError}
 import com.theseventhsense.utils.types.SSDateTime._
 
@@ -61,6 +61,6 @@ class MomentRichDateTime(dateTime: DateTime)
 }
 
 class MomentRichDateTimeOps extends AbstractRichDateTimeOps {
-  override def parse(s: String): Xor[ParseError, DateTime] =
+  override def parse(s: String): Either[ParseError, DateTime] =
     SSDateTimeParser.parse(s)
 }

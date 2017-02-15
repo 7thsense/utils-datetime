@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.{DateTime, Instant, TimeZone}
 import org.widok.moment.Moment
 
@@ -9,11 +9,11 @@ import org.widok.moment.Moment
   */
 object SSDateTimeParser extends TSSDateTimeParser {
   override def parse(
-      dateTimeString: String): Xor[DateTime.ParseError, DateTime] = {
+      dateTimeString: String): Either[DateTime.ParseError, DateTime] = {
     val date = Moment(dateTimeString).utc().toDate()
     val millis = date.getTime()
     val longMillis = millis.toLong
     val instant = Instant(longMillis)
-    Xor.right(DateTime(instant, TimeZone.UTC))
+    Either.right(DateTime(instant, TimeZone.UTC))
   }
 }

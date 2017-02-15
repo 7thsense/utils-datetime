@@ -1,6 +1,5 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.DateTime.Format
 import com.theseventhsense.utils.types.SSDateTime.{DateTime, DayOfWeek, HourOfDay, TimeZone}
@@ -39,5 +38,5 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
 }
 
 abstract class AbstractRichDateTimeOps {
-  def parse(s: String): Xor[DateTime.ParseError, DateTime]
+  def parse(s: String): Either[DateTime.ParseError, DateTime]
 }

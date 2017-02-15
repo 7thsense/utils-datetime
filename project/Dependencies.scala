@@ -4,10 +4,9 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    val Cats = "0.7.2"
-    val Circe = "0.5.2"
-    val JodaTime = "2.9.2"
-    val PlayJson = "2.5.3"
+    val Cats = "0.9.0"
+    val Circe = "0.7.0"
+    val PlayJson = "2.5.12"
     val ScalaTest = "3.0.0"
   }
 
@@ -23,10 +22,6 @@ object Dependencies {
 
   val PlayJson = Def.setting(Seq(
     "com.typesafe.play" %% "play-json" % Versions.PlayJson
-  ))
-
-  val JodaTime = Def.setting(Seq(
-    "joda-time" % "joda-time" % Versions.JodaTime
   ))
 
   val ScalaTest = Def.setting(Seq(

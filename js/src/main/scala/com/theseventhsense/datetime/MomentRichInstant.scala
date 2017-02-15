@@ -1,6 +1,6 @@
 package com.theseventhsense.datetime
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
 import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
 import org.widok.moment.{CalendarOpts, Moment}
@@ -37,10 +37,10 @@ class MomentRichInstant(instant: Instant)
 
 class MomentRichInstantOps extends AbstractRichInstantOps {
 
-  override def fromStringLocalAsUTC(s: String): Xor[ParseError, Instant] =
-    Xor.left(ParseError.Unknown("not implemented"))
+  override def fromStringLocalAsUTC(s: String): Either[ParseError, Instant] =
+    Either.left(ParseError.Unknown("not implemented"))
 
-  override def fromString(s: String): Xor[Instant.ParseError, Instant] =
+  override def fromString(s: String): Either[Instant.ParseError, Instant] =
     SSDateTimeParser
       .parse(s)
       .map(_.instant)

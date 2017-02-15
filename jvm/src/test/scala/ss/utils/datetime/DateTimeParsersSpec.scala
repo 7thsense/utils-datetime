@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import java.time.format.{DateTimeFormatter, TextStyle}
 import java.util.Locale
 
-import cats.data.Xor
+import cats.implicits._
 import com.theseventhsense.datetime.SSDateTimeParser
 import com.theseventhsense.utils.types.SSDateTime
 import org.scalatest.{MustMatchers, WordSpec}
@@ -49,19 +49,19 @@ class DateTimeParsersSpec extends WordSpec with MustMatchers {
     "provided a proper iso date" should {
       val example = "2015-01-05 09:49:33 EST"
       s"be able to parse $example" in {
-        parseDateTime(example) mustEqual Xor.right(correctDateEST)
+        parseDateTime(example) mustEqual Either.right(correctDateEST)
       }
     }
     "provided a date with valid timezone string" should {
       val example = "2015-01-05 09:49:33 US/Eastern"
       s"be able to parse $example" in {
-        parseDateTime(example) mustEqual Xor.right(correctDateEST)
+        parseDateTime(example) mustEqual Either.right(correctDateEST)
       }
     }
     "provided a pacific date with valid timezone string" should {
       val example = "2015-01-05 09:49:33 US/Pacific"
       s"be able to parse $example" in {
-        parseDateTime(example) mustEqual Xor.right(correctDatePST)
+        parseDateTime(example) mustEqual Either.right(correctDatePST)
       }
     }
     "provided a wierd marketo program date" should {
