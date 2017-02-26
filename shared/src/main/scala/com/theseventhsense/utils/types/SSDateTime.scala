@@ -190,7 +190,7 @@ object SSDateTime {
     def parse(s: String): Either[ParseError, DateTime] = dateTimeOps.parse(s)
   }
 
-  trait TimeZone {
+  trait TimeZone extends Product with Serializable {
     def name: String
 
     def asUtilTimeZone: util.TimeZone = {
