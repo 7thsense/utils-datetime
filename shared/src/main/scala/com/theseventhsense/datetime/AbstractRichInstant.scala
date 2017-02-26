@@ -6,13 +6,13 @@ import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
 /**
   * Created by erik on 6/15/16.
   */
-abstract class AbstractRichInstant(instant: Instant) {
+abstract class AbstractRichInstant(instant: Instant) extends Serializable {
   def asIsoString: String
   def asCsvString: String
   def calendarInZone(timeZone: TimeZone): String
 }
 
-abstract class AbstractRichInstantOps {
+abstract class AbstractRichInstantOps extends Serializable {
   def fromLong(s: String) =
     Either
       .catchNonFatal(s.toLong)

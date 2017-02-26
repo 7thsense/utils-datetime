@@ -7,7 +7,7 @@ import com.theseventhsense.utils.types.SSDateTime.{DateTime, DayOfWeek, HourOfDa
 /**
   * Created by erik on 6/15/16.
   */
-abstract class AbstractRichDateTime(dateTime: DateTime) {
+abstract class AbstractRichDateTime(dateTime: DateTime) extends Serializable {
   def withZoneSameInstant(timeZone: TimeZone): DateTime
   def withZoneSameLocal(timeZone: TimeZone): DateTime
   def withMillisOfSecond(millisOfSecond: Int): DateTime
@@ -37,6 +37,6 @@ abstract class AbstractRichDateTime(dateTime: DateTime) {
   def toIsoString: String
 }
 
-abstract class AbstractRichDateTimeOps {
+abstract class AbstractRichDateTimeOps extends Serializable {
   def parse(s: String): Either[DateTime.ParseError, DateTime]
 }

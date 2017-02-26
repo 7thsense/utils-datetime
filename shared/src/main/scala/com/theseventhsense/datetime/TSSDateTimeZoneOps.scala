@@ -7,7 +7,7 @@ import scala.util.Try
 /**
   * Created by erik on 2/18/16.
   */
-trait TSSDateTimeZoneOps {
+trait TSSDateTimeZoneOps extends Serializable {
   def isValid(s: String): Boolean
   def offsetSeconds(
       zone: SSDateTime.TimeZone, instant: SSDateTime.Instant): Integer

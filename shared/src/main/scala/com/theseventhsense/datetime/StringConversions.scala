@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 /**
   * Created by erik on 6/22/16.
   */
-object StringConversions {
+object StringConversions extends Serializable {
   implicit def convertStringToDayOfWeek(s: String): DayOfWeek =
     DayOfWeek.fromString(s).get
 
