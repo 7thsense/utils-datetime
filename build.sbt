@@ -21,7 +21,7 @@ lazy val ssUtilsDatetimeRoot = project
 
 val CommonSettings = Seq(
   organization := "com.theseventhsense",
-  version := "0.1.13-SNAPSHOT",
+  version := "0.1.13",
   isSnapshot := version.contains("-SNAPSHOT"),
   publishMavenStyle := true,
   bintrayOrganization := Some("7thsense"),
