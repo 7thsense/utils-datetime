@@ -36,11 +36,11 @@ lazy val ssUtilsDatetime = crossProject
   .settings(CommonSettings: _*)
   .settings(
     name := "utils-datetime",
-    libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaTest.value
+    libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaJavaTime.value
   )
   .jsSettings(jsEnv := NodeJSEnv().value)
   .jsSettings(
-    libraryDependencies += "io.github.widok" %%% "scala-js-momentjs" % "0.1.6.ss.1"
+    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % "0.7.0"
   )
 
 lazy val ssUtilsDatetimeJVM = ssUtilsDatetime.jvm
@@ -69,3 +69,9 @@ lazy val ssUtilsDatetimeCodecsPlay = project
     name := "utils-datetime-playjson",
     libraryDependencies ++= Dependencies.PlayJson.value
   )
+
+lazy val examples = project
+  .in(file("./examples"))
+  .dependsOn(ssUtilsDatetime.jvm)
+  .settings(CommonSettings: _*)
+  .settings(libraryDependencies ++= Dependencies.ScalaTest.value)

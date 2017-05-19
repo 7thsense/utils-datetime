@@ -8,6 +8,7 @@ object Dependencies {
     val Circe = "0.7.0"
     val PlayJson = "2.5.12"
     val ScalaTest = "3.0.0"
+    val ScalaJavaTime = "2.0.0-M10"
   }
 
   val Cats = Def.setting(Seq(
@@ -22,6 +23,10 @@ object Dependencies {
 
   val PlayJson = Def.setting(Seq(
     "com.typesafe.play" %% "play-json" % Versions.PlayJson
+  ))
+
+  val ScalaJavaTime = Def.setting(Seq(
+    "io.github.cquiroz" %%% "scala-java-time" % Versions.ScalaJavaTime
   ))
 
   val ScalaTest = Def.setting(Seq(

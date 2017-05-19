@@ -1,4 +1,3 @@
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")
-addSbtPlugin("com.geirsson" %% "sbt-scalafmt" % "0.3.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.15")
 addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
-addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M13")
+addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-RC1")

@@ -3,7 +3,7 @@ package com.theseventhsense.datetime
 import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.Instant.ParseError
 import com.theseventhsense.utils.types.SSDateTime.{Instant, TimeZone}
-import org.widok.moment.{CalendarOpts, Moment}
+import moment.{CalendarOpts, Moment}
 
 import scala.scalajs.js
 

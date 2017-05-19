@@ -2,7 +2,7 @@ package com.theseventhsense.datetime
 
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime.Instant
-import org.widok.moment.Moment
+import moment.Moment
 
 /**
   * Created by erik on 2/18/16.

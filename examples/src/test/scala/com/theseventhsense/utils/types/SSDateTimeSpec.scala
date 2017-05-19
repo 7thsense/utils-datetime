@@ -1,8 +1,8 @@
 package com.theseventhsense.utils.types
 
 import cats.implicits._
-import com.theseventhsense.utils.types.SSDateTime.{DateTime, KnownTimeZone, TimeZone}
 import com.theseventhsense.utils.types.SSDateTime.TimeZone.{Europe, US, UTC}
+import com.theseventhsense.utils.types.SSDateTime.{KnownTimeZone, TimeZone}
 import org.scalatest._
 
 /**

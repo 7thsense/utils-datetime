@@ -2,7 +2,7 @@ package com.theseventhsense.datetime
 
 import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.{DateTime, Instant, TimeZone}
-import org.widok.moment.Moment
+import moment.Moment
 
 /**
   * Created by erik on 12/26/15.
