@@ -43,6 +43,12 @@ class JavaTimeRichInstantOps
       .map(_.atZone(UTC).asU.instant)
       .leftMap { case err => Instant.ParseError.Unknown(err.toString) }
 
+  /**
+    * Parse instanct strings, replacing " " with "T" such that "2017-01-01 00:00:00Z" becomes "2017-01-01T00:00:00Z"
+    * @param s
+    * @return
+    */
+  
   def parseInstant(s: String): Either[Instant.ParseError, Instant] =
     Either.catchNonFatal(java.time.Instant.parse(s.replace(" ", "T"))).map(_.asU).leftMap {
       case err => Instant.ParseError.Unknown(err.toString)
