@@ -40,7 +40,7 @@ lazy val ssUtilsDatetime = crossProject
   )
   .jsSettings(jsEnv := NodeJSEnv().value)
   .jsSettings(
-    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % "0.7.0"
+    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % "0.9.0"
   )
 
 lazy val ssUtilsDatetimeJVM = ssUtilsDatetime.jvm
