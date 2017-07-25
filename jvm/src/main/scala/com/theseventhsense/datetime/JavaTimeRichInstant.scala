@@ -19,7 +19,8 @@ class JavaTimeRichInstant(instant: Instant)
 
   val UTC = ZoneId.of("UTC")
 
-  override def asCsvString: String = SSDateTimeParser.csvDateTimeFormatter.format(asJavaTime.atZone(UTC))
+  override def asCsvString: String =
+    SSDateTimeParser.csvDateTimeFormatter.format(asJavaTime.atZone(UTC))
 
   override def calendarInZone(timeZone: TimeZone): String = {
     val javaInstant = java.time.Instant.ofEpochMilli(instant.millis)
@@ -36,7 +37,8 @@ class JavaTimeRichInstantOps
     with JavaTimeImplicits {
   val UTC = ZoneId.of("UTC")
   override def fromStringLocalAsUTC(
-      s: String): Either[Instant.ParseError, Instant] =
+    s: String
+  ): Either[Instant.ParseError, Instant] =
     Either
       .catchNonFatal(DateTimeFormatter.ISO_LOCAL_DATE_TIME.parse(s))
       .map(java.time.LocalDateTime.from)
@@ -48,11 +50,13 @@ class JavaTimeRichInstantOps
     * @param s
     * @return
     */
-  
   def parseInstant(s: String): Either[Instant.ParseError, Instant] =
-    Either.catchNonFatal(java.time.Instant.parse(s.replace(" ", "T"))).map(_.asU).leftMap {
-      case err => Instant.ParseError.Unknown(err.toString)
-    }
+    Either
+      .catchNonFatal(java.time.Instant.parse(s.replace(" ", "T")))
+      .map(_.asU)
+      .leftMap {
+        case err => Instant.ParseError.Unknown(err.toString)
+      }
 
   def parseZoned(s: String): Either[Instant.ParseError, Instant] =
     SSDateTimeParser.parse(s).map { case dt => dt.instant }.leftMap {

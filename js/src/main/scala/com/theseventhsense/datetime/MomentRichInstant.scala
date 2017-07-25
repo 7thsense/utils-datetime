@@ -16,18 +16,19 @@ class MomentRichInstant(instant: Instant)
   val DefaultHourFormat = "ha"
   val DefaultCalendarOpts = js.Dynamic
     .literal(
-        "sameDay" -> s"[Today] $DefaultHourFormat",
-        "nextDay" -> s"[Tomorrow] $DefaultHourFormat",
-        "nextWeek" -> s"dddd $DefaultHourFormat",
-        "lastDay" -> s"[Yesterday] $DefaultHourFormat",
-        "lastWeek" -> s"[Last] dddd $DefaultHourFormat",
-        "sameElse" -> s"YYYY-MM-DD $DefaultHourFormat"
+      "sameDay" -> s"[Today] $DefaultHourFormat",
+      "nextDay" -> s"[Tomorrow] $DefaultHourFormat",
+      "nextWeek" -> s"dddd $DefaultHourFormat",
+      "lastDay" -> s"[Yesterday] $DefaultHourFormat",
+      "lastWeek" -> s"[Last] dddd $DefaultHourFormat",
+      "sameElse" -> s"YYYY-MM-DD $DefaultHourFormat"
     )
     .asInstanceOf[CalendarOpts]
 
   override def asIsoString: String = instant.asMoment.utc().format
 
-  override def asCsvString: String = instant.asMoment.utc().format("Y-MM-DD HH:mm:ss.SSS[Z]")
+  override def asCsvString: String =
+    instant.asMoment.utc().format("Y-MM-DD HH:mm:ss.SSS[Z]")
 
   override def calendarInZone(timeZone: TimeZone): String = {
     val moment = Moment(instant.millis.toDouble)

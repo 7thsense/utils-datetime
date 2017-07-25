@@ -15,9 +15,11 @@ trait UDateTimeFormats {
         case JsString(s) => JsSuccess(SSDateTime.TimeZone.from(s))
         case _ =>
           JsError(
-              Seq(JsPath() ->
-                  Seq(ValidationError(
-                          "validate.error.expected.datetimezone.id"))))
+            Seq(
+              JsPath() ->
+                Seq(ValidationError("validate.error.expected.datetimezone.id"))
+            )
+          )
       }
     }
 
@@ -35,13 +37,18 @@ trait UDateTimeFormats {
             case Right(d) => JsSuccess(d)
             case Left(e) =>
               JsError(
-                  Seq(JsPath() ->
-                      Seq(ValidationError("validate.error.unexpected.format",
-                                          e))))
+                Seq(
+                  JsPath() ->
+                    Seq(ValidationError("validate.error.unexpected.format", e))
+                )
+              )
           }
         case _ =>
-          JsError(Seq(JsPath() -> Seq(
-                      ValidationError("validate.error.expected.date"))))
+          JsError(
+            Seq(
+              JsPath() -> Seq(ValidationError("validate.error.expected.date"))
+            )
+          )
       }
     }
 
@@ -51,10 +58,7 @@ trait UDateTimeFormats {
     }
 
   implicit val uDateTimeInstantFormat: Format[SSDateTime.Instant] =
-    Format[SSDateTime.Instant](
-        uDateTimeInstantReads,
-        uDateTimeInstantWrites
-    )
+    Format[SSDateTime.Instant](uDateTimeInstantReads, uDateTimeInstantWrites)
 }
 
 object UDateTimeFormats extends UDateTimeFormats

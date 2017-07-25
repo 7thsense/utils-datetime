@@ -19,8 +19,10 @@ trait JavaTimeImplicits {
 
   implicit class RichJavaTimeZonedDateTime(zonedDateTime: ZonedDateTime) {
     def asU: DateTime =
-      DateTime.apply(zonedDateTime.toOffsetDateTime.toInstant.asU,
-                     zonedDateTime.getZone.asU)
+      DateTime.apply(
+        zonedDateTime.toOffsetDateTime.toInstant.asU,
+        zonedDateTime.getZone.asU
+      )
   }
 }
 

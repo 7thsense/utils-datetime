@@ -9,7 +9,8 @@ import moment.Moment
   */
 object SSDateTimeParser extends TSSDateTimeParser {
   override def parse(
-      dateTimeString: String): Either[DateTime.ParseError, DateTime] = {
+    dateTimeString: String
+  ): Either[DateTime.ParseError, DateTime] = {
     val date = Moment(dateTimeString).utc().toDate()
     val millis = date.getTime()
     val longMillis = millis.toLong

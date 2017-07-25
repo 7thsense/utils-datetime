@@ -16,8 +16,11 @@ class JavaTimeRichDateTime(dateTime: DateTime)
     with JavaTimeTimeZoneImplicits
     with JavaTimeImplicits {
 
-  lazy val asJavaTime: ZonedDateTime = ZonedDateTime.ofInstant(
-      dateTime.instant.asJavaTime, dateTime.zone.asJavaTime)
+  lazy val asJavaTime: ZonedDateTime =
+    ZonedDateTime.ofInstant(
+      dateTime.instant.asJavaTime,
+      dateTime.zone.asJavaTime
+    )
 
   override def withZoneSameInstant(timeZone: TimeZone): DateTime =
     asJavaTime.withZoneSameInstant(timeZone.asJavaTime).asU
@@ -64,10 +67,13 @@ class JavaTimeRichDateTime(dateTime: DateTime)
 
   override def year: SSDateTime.Year = SSDateTime.Year(asJavaTime.getYear)
 
-  override def plusMonths(months: Int): DateTime = asJavaTime.plusMonths(months).asU
-  override def minusMonths(months: Int): DateTime = asJavaTime.minusMonths(months).asU
+  override def plusMonths(months: Int): DateTime =
+    asJavaTime.plusMonths(months).asU
+  override def minusMonths(months: Int): DateTime =
+    asJavaTime.minusMonths(months).asU
   override def plusYears(years: Int): DateTime = asJavaTime.plusYears(years).asU
-  override def minusYears(years: Int): DateTime = asJavaTime.minusYears(years).asU
+  override def minusYears(years: Int): DateTime =
+    asJavaTime.minusYears(years).asU
 
   override def atStartOfDay: DateTime =
     asJavaTime.toLocalDate.atStartOfDay(dateTime.zone.asJavaTime).asU
@@ -87,17 +93,17 @@ class JavaTimeRichDateTime(dateTime: DateTime)
   override def toIsoString: String = format(Format.IsoZonedDateTime)
 
   override def format(format: Format): String = format match {
-    case Format.HourAP ⇒
+    case Format.HourAP =>
       asJavaTime
         .format(DateTimeFormatter.ofPattern("ha"))
         .replace("AM", "a")
         .replace("PM", "p")
-    case Format.HourMinuteAmPm ⇒
+    case Format.HourMinuteAmPm =>
       asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
-    case Format.Year ⇒ asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
-    case Format.YearMonthDay ⇒
+    case Format.Year => asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
+    case Format.YearMonthDay =>
       asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
-    case Format.IsoZonedDateTime ⇒
+    case Format.IsoZonedDateTime =>
       asJavaTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
   }
 }

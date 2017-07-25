@@ -36,11 +36,14 @@ class JavaTimeRichTimeZoneOps extends AbstractRichTimeZoneOps {
   }
 
   override def parse(
-      s: String): Either[SSDateTime.TimeZone.ParseError, SSDateTime.TimeZone] = {
+    s: String
+  ): Either[SSDateTime.TimeZone.ParseError, SSDateTime.TimeZone] = {
     Either
       .catchNonFatal(ZoneId.of(s))
-      .orElse(normalizeOffset(s).flatMap(offset =>
-                Either.catchNonFatal(ZoneId.of(offset))))
+      .orElse(
+        normalizeOffset(s)
+          .flatMap(offset => Either.catchNonFatal(ZoneId.of(offset)))
+      )
       .leftMap { ex =>
         TimeZone.ParseError.Unknown
       }

@@ -9,10 +9,10 @@ import com.theseventhsense.utils.types.SSDateTime.DateTime
 object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
   // Force the default timezone to be UTC
 
-  lazy val Eastern  = ZoneId.of("US/Eastern")
-  lazy val Central  = ZoneId.of("US/Central")
+  lazy val Eastern = ZoneId.of("US/Eastern")
+  lazy val Central = ZoneId.of("US/Central")
   lazy val Mountain = ZoneId.of("US/Mountain")
-  lazy val Pacific  = ZoneId.of("US/Pacific")
+  lazy val Pacific = ZoneId.of("US/Pacific")
 
   lazy val noDateSeperatorsDateTimeFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyyMMddHH:mm:ss ZZZ")
@@ -70,31 +70,45 @@ object SSDateTimeParser extends TSSDateTimeParser with JavaTimeImplicits {
     "PDT" -> Pacific
   )
 
-  def parseDateTime(dateTimeString: String): Either[DateTime.ParseError, ZonedDateTime] = {
+  def parseDateTime(
+    dateTimeString: String
+  ): Either[DateTime.ParseError, ZonedDateTime] = {
     if (Option(dateTimeString).isEmpty || dateTimeString == "" ||
         dateTimeString == "null") {
-      Either.right(ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC")))
+      Either.right(
+        ZonedDateTime
+          .ofInstant(java.time.Instant.ofEpochMilli(0L), ZoneId.of("UTC"))
+      )
     } else if (isAllDigits(dateTimeString)) {
       Either.right(fromLong(dateTimeString.toLong))
     } else {
       var dts = dateTimeString
-      for ((abbr, zone) ← timeZoneAbbreviations.toSeq) {
+      for ((abbr, zone) <- timeZoneAbbreviations.toSeq) {
         dts = dts.replace(abbr, zone.getId)
       }
       dts = dts.replace("Z+0000", "Z")
       Either
-        .catchNonFatal(ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME))
-        .orElse(Either.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter)))
-        .leftMap(ex ⇒ DateTime.ParseError.Unknown(ex.getMessage))
+        .catchNonFatal(
+          ZonedDateTime.parse(dts, DateTimeFormatter.ISO_ZONED_DATE_TIME)
+        )
+        .orElse(
+          Either.catchNonFatal(ZonedDateTime.parse(dts, flexibleFormatter))
+        )
+        .leftMap(ex => DateTime.ParseError.Unknown(ex.getMessage))
     }
   }
 
   def fromLong(number: Long): ZonedDateTime = {
-    ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(number), ZoneId.of("UTC"))
+    ZonedDateTime.ofInstant(
+      java.time.Instant.ofEpochMilli(number),
+      ZoneId.of("UTC")
+    )
   }
 
   def isAllDigits(x: String): Boolean = x forall Character.isDigit
 
-  override def parse(dateTimeString: String): Either[DateTime.ParseError, DateTime] =
+  override def parse(
+    dateTimeString: String
+  ): Either[DateTime.ParseError, DateTime] =
     parseDateTime(dateTimeString).map(_.asU)
 }

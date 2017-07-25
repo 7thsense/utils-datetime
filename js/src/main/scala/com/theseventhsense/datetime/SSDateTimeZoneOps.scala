@@ -10,8 +10,8 @@ import moment.Moment
 object SSDateTimeZoneOps extends TSSDateTimeZoneOps {
   override def isValid(s: String): Boolean = true
 
-  override def offsetSeconds(
-      zone: SSDateTime.TimeZone, instant: SSDateTime.Instant): Integer = 0
+  override def offsetSeconds(zone: SSDateTime.TimeZone,
+                             instant: SSDateTime.Instant): Integer = 0
 
   override def parse(s: String): Option[SSDateTime.TimeZone] = None
 
