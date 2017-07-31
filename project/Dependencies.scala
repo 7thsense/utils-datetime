@@ -6,7 +6,7 @@ object Dependencies {
   object Versions {
     val Cats = "0.9.0"
     val Circe = "0.7.0"
-    val PlayJson = "2.5.12"
+    val PlayJson = "2.6.2"
     val ScalaTest = "3.0.0"
     val ScalaJavaTime = "2.0.0-M10"
   }

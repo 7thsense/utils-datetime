@@ -2,7 +2,6 @@ package com.theseventhsense.udatetime
 
 import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 /**
@@ -17,7 +16,7 @@ trait UDateTimeFormats {
           JsError(
             Seq(
               JsPath() ->
-                Seq(ValidationError("validate.error.expected.datetimezone.id"))
+                Seq(JsonValidationError("validate.error.expected.datetimezone.id"))
             )
           )
       }
@@ -39,14 +38,14 @@ trait UDateTimeFormats {
               JsError(
                 Seq(
                   JsPath() ->
-                    Seq(ValidationError("validate.error.unexpected.format", e))
+                    Seq(JsonValidationError("validate.error.unexpected.format", e))
                 )
               )
           }
         case _ =>
           JsError(
             Seq(
-              JsPath() -> Seq(ValidationError("validate.error.expected.date"))
+              JsPath() -> Seq(JsonValidationError("validate.error.expected.date"))
             )
           )
       }
