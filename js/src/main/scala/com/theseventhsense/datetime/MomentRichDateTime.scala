@@ -1,6 +1,5 @@
 package com.theseventhsense.datetime
 
-import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime.DateTime.{Format, ParseError}
 import com.theseventhsense.utils.types.SSDateTime._
 

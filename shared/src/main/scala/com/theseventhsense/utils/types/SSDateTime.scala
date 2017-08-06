@@ -1,9 +1,9 @@
 package com.theseventhsense.utils.types
 
+import cats.implicits._
 import java.util
 import java.util.Date
 
-import cats.implicits._
 import com.theseventhsense.datetime._
 
 import scala.concurrent.duration.Duration

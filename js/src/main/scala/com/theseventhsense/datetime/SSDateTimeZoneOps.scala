@@ -16,6 +16,6 @@ object SSDateTimeZoneOps extends TSSDateTimeZoneOps {
   override def parse(s: String): Option[SSDateTime.TimeZone] = None
 
   override def instantAsIsoString(instant: Instant): String = {
-    Moment(instant.millis).utc().format()
+    Moment(instant.millis.toDouble).utc().format()
   }
 }
