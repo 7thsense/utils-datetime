@@ -166,6 +166,7 @@ object SSDateTime {
 
     object Format {
       case object Year extends Format
+      case object YearMonth extends Format
       case object YearMonthDay extends Format
       case object HourAP extends Format
       case object HourMinuteAmPm extends Format

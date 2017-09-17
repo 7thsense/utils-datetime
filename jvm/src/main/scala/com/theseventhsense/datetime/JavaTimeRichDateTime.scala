@@ -100,7 +100,10 @@ class JavaTimeRichDateTime(dateTime: DateTime)
         .replace("PM", "p")
     case Format.HourMinuteAmPm =>
       asJavaTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
-    case Format.Year => asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
+    case Format.Year =>
+      asJavaTime.format(DateTimeFormatter.ofPattern("YYYY"))
+    case Format.YearMonth =>
+      asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM"))
     case Format.YearMonthDay =>
       asJavaTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
     case Format.IsoZonedDateTime =>
