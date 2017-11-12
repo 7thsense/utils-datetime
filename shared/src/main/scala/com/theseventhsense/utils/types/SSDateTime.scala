@@ -75,13 +75,16 @@ object SSDateTime {
 
     def minusWeeks(weeks: Int): Instant = minusDays(weeks * 7)
 
-    def plusMonths(months: Int): Instant = DateTime(this).plusMonths(months).instant
+    def plusMonths(months: Int): Instant =
+      DateTime(this).plusMonths(months).instant
 
-    def minusMonths(months: Int): Instant = DateTime(this).minusMonths(months).instant
+    def minusMonths(months: Int): Instant =
+      DateTime(this).minusMonths(months).instant
 
     def plusYears(years: Int): Instant = DateTime(this).plusYears(years).instant
 
-    def minusYears(years: Int): Instant = DateTime(this).minusYears(years).instant
+    def minusYears(years: Int): Instant =
+      DateTime(this).minusYears(years).instant
 
     def withRoundedMinute: Instant = DateTime(this).withRoundedMinute.instant
 
@@ -108,9 +111,8 @@ object SSDateTime {
     implicit def enrichInstant(instant: Instant): AbstractRichInstant =
       new RichInstant(instant)
 
-    implicit val ordering: Ordering[Instant] = Ordering.by {
-      instant: Instant =>
-        instant.millis
+    implicit val ordering: Ordering[Instant] = Ordering.by { instant: Instant =>
+      instant.millis
     }
 
     def parse(s: String): Either[ParseError, Instant] = instantOps.parse(s)
@@ -126,10 +128,7 @@ object SSDateTime {
     val Min = apply(Long.MinValue)
   }
 
-  case class DateTime(
-      instant: Instant,
-      zone: TimeZone = TimeZone.UTC
-  )
+  case class DateTime(instant: Instant, zone: TimeZone = TimeZone.UTC)
       extends Comparable[DateTime] {
     override def compareTo(o: DateTime): Int = instant.compareTo(o.instant)
 
@@ -215,6 +214,9 @@ object SSDateTime {
     override def toString: String = s"$name (Custom)"
   }
 
+  case class DisplayTimeZone(name: String, displayName: String, offset: Int, offsetId: String)
+      extends TimeZone
+
   sealed trait KnownTimeZone extends TimeZone {
     def knownName: String
 
@@ -228,8 +230,9 @@ object SSDateTime {
       val unknownTimeZone =
         KnownTimeZone.apply(s).orElse(TimeZone.parse(s).toOption)
       unknownTimeZone.flatMap { zone =>
-        TimeZone.all.find(tz =>
-              tz.offsetSecondsAt(when) == zone.offsetSecondsAt(when))
+        TimeZone.all.find(
+          tz => tz.offsetSecondsAt(when) == zone.offsetSecondsAt(when)
+        )
       }
     }
 
@@ -385,8 +388,8 @@ object SSDateTime {
       override val shortText = "Sun"
     }
 
-    val all = Seq(
-        Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+    val all =
+      Seq(Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
 
     def from(isoNumber: Int): Option[DayOfWeek] =
       all.find(_.isoNumber == isoNumber)
@@ -533,30 +536,30 @@ object SSDateTime {
     }
 
     val all = Seq(
-        Hour00,
-        Hour01,
-        Hour02,
-        Hour03,
-        Hour04,
-        Hour05,
-        Hour06,
-        Hour07,
-        Hour08,
-        Hour09,
-        Hour10,
-        Hour11,
-        Hour12,
-        Hour13,
-        Hour14,
-        Hour15,
-        Hour16,
-        Hour17,
-        Hour18,
-        Hour19,
-        Hour20,
-        Hour21,
-        Hour22,
-        Hour23
+      Hour00,
+      Hour01,
+      Hour02,
+      Hour03,
+      Hour04,
+      Hour05,
+      Hour06,
+      Hour07,
+      Hour08,
+      Hour09,
+      Hour10,
+      Hour11,
+      Hour12,
+      Hour13,
+      Hour14,
+      Hour15,
+      Hour16,
+      Hour17,
+      Hour18,
+      Hour19,
+      Hour20,
+      Hour21,
+      Hour22,
+      Hour23
     )
 
     def from(num: Int): Option[HourOfDay] = all.find(_.num == num)
@@ -702,38 +705,38 @@ object SSDateTime {
     }
 
     val all = Seq(
-        Day01,
-        Day02,
-        Day03,
-        Day04,
-        Day05,
-        Day06,
-        Day07,
-        Day08,
-        Day09,
-        Day10,
-        Day11,
-        Day12,
-        Day13,
-        Day14,
-        Day15,
-        Day16,
-        Day17,
-        Day18,
-        Day19,
-        Day20,
-        Day21,
-        Day22,
-        Day23,
-        Day24,
-        Day25,
-        Day26,
-        Day27,
-        Day28,
-        Day29,
-        Day30,
-        Day31,
-        Day32
+      Day01,
+      Day02,
+      Day03,
+      Day04,
+      Day05,
+      Day06,
+      Day07,
+      Day08,
+      Day09,
+      Day10,
+      Day11,
+      Day12,
+      Day13,
+      Day14,
+      Day15,
+      Day16,
+      Day17,
+      Day18,
+      Day19,
+      Day20,
+      Day21,
+      Day22,
+      Day23,
+      Day24,
+      Day25,
+      Day26,
+      Day27,
+      Day28,
+      Day29,
+      Day30,
+      Day31,
+      Day32
     )
 
     def from(num: Int): Option[DayOfMonth] = all.find(_.num == num)
@@ -858,18 +861,18 @@ object SSDateTime {
     }
 
     val all = Seq(
-        January,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December
+      January,
+      February,
+      March,
+      April,
+      May,
+      June,
+      July,
+      August,
+      September,
+      October,
+      November,
+      December
     )
 
     def from(num: Int): Option[Month] = {

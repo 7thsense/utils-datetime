@@ -76,14 +76,18 @@ trait UDateTimeCodecs {
     Encoder[Int].contramap(_.num)
   implicit val dateTimeWeekOfMonthDecoder: Decoder[SSDateTime.WeekOfMonth] =
     Decoder[Int].map(num ⇒ SSDateTime.WeekOfMonth.all.find(_.num == num).get)
+  implicit val displayTimeZoneEncoder: Encoder[SSDateTime.DisplayTimeZone] =
+    deriveEncoder
+  implicit val displayTimeZoneDecoder: Decoder[SSDateTime.DisplayTimeZone] =
+    deriveDecoder
   implicit val dateTimeZoneEncoder: Encoder[SSDateTime.TimeZone] =
     Encoder[String].contramap(_.name)
   implicit val dateTimeZoneDecoder: Decoder[SSDateTime.TimeZone] =
     Decoder[String].map(SSDateTime.TimeZone.from)
   implicit val ssDateTimeEncoder: Encoder[SSDateTime.DateTime] =
-    deriveEncoder[SSDateTime.DateTime]
+    deriveEncoder
   implicit val ssDateTimeDecoder: Decoder[SSDateTime.DateTime] =
-    deriveDecoder[SSDateTime.DateTime]
+    deriveDecoder
 
   implicit val yearKeyEncoder: KeyEncoder[Year] =
     new KeyEncoder[SSDateTime.Year] {
