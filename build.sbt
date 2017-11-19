@@ -1,4 +1,5 @@
 val scala211Version = "2.11.8"
+val scala212Version = "2.12.4"
 
 resolvers in ThisBuild ++= Seq(
   Resolver.bintrayRepo("easel", "maven"),
@@ -15,8 +16,8 @@ lazy val ssUtilsDatetimeRoot = project
   .settings(
     publish := {},
     publishLocal := {},
-    crossScalaVersions := Seq(scala211Version),
-    scalaVersion := scala211Version
+    crossScalaVersions := Seq(scala211Version, scala212Version),
+    scalaVersion := scala212Version
   )
 
 val CommonSettings = Seq(
@@ -26,8 +27,8 @@ val CommonSettings = Seq(
   publishMavenStyle := true,
   bintrayOrganization := Some("7thsense"),
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-  crossScalaVersions := Seq(scala211Version),
-  scalaVersion := scala211Version
+  crossScalaVersions := Seq(scala211Version, scala212Version),
+  scalaVersion := scala212Version
 )
 
 lazy val ssUtilsDatetime = crossProject
@@ -38,7 +39,7 @@ lazy val ssUtilsDatetime = crossProject
     name := "utils-datetime",
     libraryDependencies ++= Dependencies.Cats.value ++ Dependencies.ScalaJavaTime.value
   )
-  .jsSettings(jsEnv := NodeJSEnv().value)
+  .jsSettings(jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv())
   .jsSettings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % "0.9.0"
   )

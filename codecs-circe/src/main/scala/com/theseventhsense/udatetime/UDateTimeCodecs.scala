@@ -5,7 +5,8 @@ import java.util.Date
 import cats.implicits._
 import com.theseventhsense.utils.types.SSDateTime
 import com.theseventhsense.utils.types.SSDateTime._
-import io.circe.generic.semiauto._
+import io.circe.generic.extras.semiauto._
+import io.circe.generic.extras.defaults._
 import io.circe.{Decoder, Encoder, KeyDecoder, KeyEncoder}
 
 import scala.util.Try
